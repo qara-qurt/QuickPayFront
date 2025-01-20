@@ -1,19 +1,23 @@
-import { Box, Button, FormControlLabel, Checkbox, Typography } from '@mui/material'
+import { Box, Button, FormControlLabel, Checkbox, Alert } from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom'
 import { CustomTextField } from '@/shared/ui/inputs/CustomTextField'
 import { COLORS } from '@/shared/style/colors'
 import { useForm } from '@/features/auth/hooks/useForm'
 import { useAuth } from '../hooks/useAuth'
-import { useEffect } from 'react'
-import { ErrorSpan } from '@/shared/ui/errors/ErrorSpan'
+import { useEffect, useState } from 'react'
 
 export const LoginForm = () => {
-    const { formState, handleInputChange, handleCheckboxChange } = useForm()
+    const { formState, handleInputChange } = useForm({
+        username: '',
+        password: '',
+    })
     const { isAuthenticated, error, handleSignIn } = useAuth()
     const navigate = useNavigate()
 
+    const [checkbox, setCheckbox] = useState(false)
+
     const onSignIn = () => {
-        handleSignIn(formState.username, formState.password)
+        handleSignIn(formState.username as string, formState.password as string)
     }
 
     useEffect(() => {
@@ -53,7 +57,7 @@ export const LoginForm = () => {
                     onChange={e => handleInputChange(e, 'password')}
                 />
                 {/* Show error message if user is not authenticated after login attempt */}
-                {error != '' && <ErrorSpan error={error} />}
+                {error != '' && <Alert severity="error">{error}</Alert>}
 
                 <Box
                     display="flex"
@@ -66,11 +70,12 @@ export const LoginForm = () => {
                         label="Remember me"
                         control={
                             <Checkbox
-                                checked={formState.rememberMe}
-                                onChange={handleCheckboxChange}
+                                checked={checkbox}
+                                onChange={(e, checked) => setCheckbox(checked)}
                             />
                         }
                     />
+
                     <Link to="#" style={{ textDecoration: 'none', color: COLORS.gray }}>
                         Forgot password?
                     </Link>
@@ -88,7 +93,7 @@ export const LoginForm = () => {
                     Sign in
                 </Button>
                 <Link
-                    to="#"
+                    to="/sign-up"
                     style={{
                         marginTop: 20,
                         textDecoration: 'none',

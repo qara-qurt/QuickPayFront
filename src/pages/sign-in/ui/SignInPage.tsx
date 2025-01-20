@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material'
 import logo from '@/assets/logo.svg'
 import banner from '@/assets/banner.png'
 import { COLORS } from '@/shared/style/colors'
-import { LoginForm } from '@/features/auth/ui/LoginForm'
+import { LoginForm } from '@/features/auth'
 
 export const SignInPage = () => {
     return (

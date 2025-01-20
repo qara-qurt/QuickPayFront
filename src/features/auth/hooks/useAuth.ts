@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { loginUser } from '../model/authSlice'
+import { loginUser, registerUser } from '../model/authSlice'
 import { AppDispatch } from '@/app/store'
 import { useState } from 'react'
 
@@ -9,7 +9,7 @@ export const useAuth = () => {
     const [error, setError] = useState('')
 
     const handleSignIn = async (username: string, password: string) => {
-        if (username !== '' && password !== '') {
+        if (username && password) {
             const result = await dispatch(loginUser({ username, password }))
 
             if (loginUser.fulfilled.match(result)) {
@@ -18,12 +18,34 @@ export const useAuth = () => {
                     localStorage.setItem('token', user.token)
                     setIsAuthenticated(true)
                 }
-            } else if (loginUser.rejected.match(result)) {
+            } else {
                 setIsAuthenticated(false)
-                setError('incorrect username or password')
+                setError('Incorrect username or password')
             }
         }
     }
 
-    return { isAuthenticated, error, handleSignIn }
+    const handleRegister = async (userData: {
+        name: string
+        surname: string
+        email: string
+        username: string
+        password: string
+    }) => {
+        const { name, surname, email, username, password } = userData
+
+        if (name && surname && email && username && password) {
+            const result = await dispatch(
+                registerUser({ name, surname, email, username, password }),
+            )
+
+            if (registerUser.fulfilled.match(result)) {
+                setIsAuthenticated(true)
+            } else {
+                setError('Failed to register. Please try again.')
+            }
+        }
+    }
+
+    return { isAuthenticated, error, handleSignIn, handleRegister }
 }

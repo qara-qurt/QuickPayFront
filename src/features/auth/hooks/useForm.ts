@@ -1,11 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 
-export const useForm = () => {
-    const [formState, setFormState] = useState({
-        username: '',
-        password: '',
-        rememberMe: false,
-    })
+export const useForm = (initialState: { [key: string]: string }) => {
+    const [formState, setFormState] = useState<{ [key: string]: string }>(initialState)
 
     const handleInputChange = (
         e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -17,16 +13,8 @@ export const useForm = () => {
         })
     }
 
-    const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setFormState({
-            ...formState,
-            rememberMe: e.target.checked,
-        })
-    }
-
     return {
         formState,
         handleInputChange,
-        handleCheckboxChange,
     }
 }
