@@ -1,8 +1,8 @@
 import { Box, Button, Alert } from '@mui/material'
-import { CustomTextField } from '@/shared/ui/inputs/CustomTextField'
 import { useForm } from '@/features/auth/hooks/useForm'
 import { useAuth } from '../hooks/useAuth'
 import { useState } from 'react'
+import { CustomTextField } from '@/shared/ui'
 
 export const RegisterForm = () => {
     const { error, handleRegister } = useAuth()

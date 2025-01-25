@@ -1,10 +1,10 @@
 import { Box, Button, FormControlLabel, Checkbox, Alert } from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom'
-import { CustomTextField } from '@/shared/ui/inputs/CustomTextField'
 import { COLORS } from '@/shared/style/colors'
 import { useForm } from '@/features/auth/hooks/useForm'
 import { useAuth } from '../hooks/useAuth'
 import { useEffect, useState } from 'react'
+import { CustomTextField } from '@/shared/ui'
 
 export const LoginForm = () => {
     const { formState, handleInputChange } = useForm({

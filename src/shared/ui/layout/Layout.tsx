@@ -1,9 +1,14 @@
+import { Box } from '@mui/material'
 import { Outlet } from 'react-router-dom'
 
 export const Layout = () => {
     return (
-        <div>
+        <Box
+            sx={{
+                fontFamily: 'Nunito Sans, Arial, sans-serif',
+            }}
+        >
             <Outlet />
-        </div>
+        </Box>
     )
 }
