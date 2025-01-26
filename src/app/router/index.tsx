@@ -4,9 +4,11 @@ import { SignUpPage } from '@/pages/sign-up'
 import { MainPage } from '@/pages/main'
 import { Layout } from '@/shared/ui'
 
+const mainRoutes = ['/all', '/cash-boxes', '/products', '/employees', '/analytics']
+
 export const router = createBrowserRouter([
-    {
-        path: '',
+    ...mainRoutes.map(path => ({
+        path,
         element: <Layout />,
         children: [
             {
@@ -14,10 +16,9 @@ export const router = createBrowserRouter([
                 element: <MainPage />,
             },
         ],
-    },
+    })),
     {
         path: '/sign-in',
-        element: <Layout />,
         children: [
             {
                 index: true,
@@ -27,7 +28,6 @@ export const router = createBrowserRouter([
     },
     {
         path: '/sign-up',
-        element: <Layout />,
         children: [
             {
                 index: true,

@@ -21,7 +21,7 @@ export const EmployeeCard = ({ employee }: IEmployeeCardProps) => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                padding: '20px 40px',
+                padding: '10px 30px',
             }}
             onClick={() => navigate(`#`)}
         >
@@ -31,13 +31,18 @@ export const EmployeeCard = ({ employee }: IEmployeeCardProps) => {
                     margin: '15px 0',
                 }}
             />
-            <Typography variant="h6">
+            <Typography
+                variant="h6"
+                sx={{
+                    fontSize: '18px',
+                }}
+            >
                 {employee.surname} {employee.name}
             </Typography>
             <Typography
                 variant="h6"
                 sx={{
-                    fontSize: '16px',
+                    fontSize: '14px',
                     fontWeight: 500,
                     marginTop: '-8px',
                     border: `1.5px solid ${COLORS.gray}`,
@@ -53,9 +58,10 @@ export const EmployeeCard = ({ employee }: IEmployeeCardProps) => {
                 variant="h6"
                 sx={{
                     fontWeight: 500,
+                    fontSize: '16px',
                 }}
             >
-                username: qaraqurt
+                login: qaraqurt
             </Typography>
         </Box>
     )

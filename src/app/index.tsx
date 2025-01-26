@@ -8,6 +8,7 @@ import { RouterProvider } from 'react-router-dom'
 const theme = createTheme({
     typography: {
         fontFamily: 'Nunito Sans, Arial, sans-serif',
+        fontSize: 14,
         h1: {
             fontWeight: 'bold',
         },

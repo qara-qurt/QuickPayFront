@@ -18,7 +18,14 @@ export const ProductCard = ({ product }: IProductCardProps) => {
                 borderLeft: `5px solid ${COLORS.blue}`,
             }}
         >
-            <Typography variant="h6">{product.name}</Typography>
+            <Typography
+                variant="h6"
+                sx={{
+                    fontSize: '18px',
+                }}
+            >
+                {product.name}
+            </Typography>
             <Typography variant="inherit">Price : {product.price}kz</Typography>
             <Typography
                 variant="inherit"

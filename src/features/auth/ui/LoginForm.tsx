@@ -87,6 +87,7 @@ export const LoginForm = () => {
                         px: 4,
                         py: 1,
                         fontWeight: 700,
+                        backgroundColor: COLORS.blue,
                     }}
                     onClick={onSignIn}
                 >

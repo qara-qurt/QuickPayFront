@@ -3,6 +3,7 @@ import { useForm } from '@/features/auth/hooks/useForm'
 import { useAuth } from '../hooks/useAuth'
 import { useState } from 'react'
 import { CustomTextField } from '@/shared/ui'
+import { COLORS } from '@/shared/style/colors'
 
 export const RegisterForm = () => {
     const { error, handleRegister } = useAuth()
@@ -142,6 +143,7 @@ export const RegisterForm = () => {
                                 fontWeight: 700,
                                 mt: 3,
                                 alignSelf: 'flex-end',
+                                backgroundColor: COLORS.blue,
                             }}
                             onClick={onRegister}
                         >
