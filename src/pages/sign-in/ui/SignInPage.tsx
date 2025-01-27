@@ -6,7 +6,15 @@ import { LoginForm } from '@/features/auth'
 
 export const SignInPage = () => {
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="100vh"
+            sx={{
+                fontFamily: 'Nunito Sans, Arial, sans-serif',
+            }}
+        >
             {/* Левая часть */}
             <Box
                 flex={1}

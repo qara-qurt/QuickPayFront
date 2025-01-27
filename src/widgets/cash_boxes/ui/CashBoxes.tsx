@@ -1,35 +1,19 @@
 import { COLORS } from '@/shared/style/colors'
-import {
-    Box,
-    Button,
-    IconButton,
-    Tab,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TablePagination,
-    TableRow,
-    Tabs,
-    Typography,
-} from '@mui/material'
+import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
 import { useActiveTab } from '@/pages/main/hooks/useActiveTab'
-import { useState } from 'react'
-import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
+import add from '@/assets/add.svg'
+import { Transactions } from './Transactions'
 
 const routeToTab: Record<string, number> = {
-    '/cash-boxes?id=1': 0,
-    '/cash-boxes?id=2': 1,
-    '/cash-boxes?id=3': 2,
-    '/cash-boxes?id=4': 3,
-    '/cash-boxes?id=5': 4,
+    '/cash-boxes?id=PN0001265': 0,
+    '/cash-boxes?id=PN0002365': 1,
+    '/cash-boxes?id=PN0002265': 2,
 }
 
 const cashBoxes = [
     { id: 'PN0001265', name: 'Cash Box - 1' },
     { id: 'PN0002365', name: 'Cash Box - 2' },
-    { id: 'PN0001265', name: 'Cash Box - 3' },
+    { id: 'PN0002265', name: 'Cash Box - 3' },
 ]
 
 const transactions = [
@@ -37,49 +21,147 @@ const transactions = [
         transaction_id: 'PN0001265',
         date: '2021-10-10 13:40',
         payment: 'Kaspi QR',
+        products: [
+            { name: 'Product 1', price: 100, count: 2 },
+            { name: 'Product 2', price: 200, count: 3 },
+        ],
         totalPrice: 1400,
     },
     {
-        transaction_id: 'PN0002365',
-        date: '2021-10-11 14:00',
-        payment: 'Credit Card',
-        totalPrice: 1200,
+        transaction_id: 'PN0001265',
+        date: '2021-10-10 13:40',
+        payment: 'Kaspi QR',
+        products: [
+            { name: 'Product 1', price: 100, count: 2 },
+            { name: 'Product 2', price: 200, count: 3 },
+        ],
+        totalPrice: 1400,
     },
-    { transaction_id: 'PN0003465', date: '2021-10-12 15:30', payment: 'Cash', totalPrice: 500 },
-    { transaction_id: 'PN0003465', date: '2021-10-12 15:30', payment: 'Cash', totalPrice: 500 },
-    { transaction_id: 'PN0003465', date: '2021-10-12 15:30', payment: 'Cash', totalPrice: 500 },
-    { transaction_id: 'PN0003465', date: '2021-10-12 15:30', payment: 'Cash', totalPrice: 500 },
-    { transaction_id: 'PN0003465', date: '2021-10-12 15:30', payment: 'Cash', totalPrice: 500 },
-    { transaction_id: 'PN0003465', date: '2021-10-12 15:30', payment: 'Cash', totalPrice: 500 },
-    { transaction_id: 'PN0003465', date: '2021-10-12 15:30', payment: 'Cash', totalPrice: 500 },
-    { transaction_id: 'PN0003465', date: '2021-10-12 15:30', payment: 'Cash', totalPrice: 500 },
-    { transaction_id: 'PN0003465', date: '2021-10-12 15:30', payment: 'Cash', totalPrice: 500 },
-    { transaction_id: 'PN0003465', date: '2021-10-12 15:30', payment: 'Cash', totalPrice: 500 },
-    { transaction_id: 'PN0003465', date: '2021-10-12 15:30', payment: 'Cash', totalPrice: 500 },
-    { transaction_id: 'PN0003465', date: '2021-10-12 15:30', payment: 'Cash', totalPrice: 500 },
+    {
+        transaction_id: 'PN0001265',
+        date: '2021-10-10 13:40',
+        payment: 'Kaspi QR',
+        products: [
+            { name: 'Product 1', price: 100, count: 2 },
+            { name: 'Product 2', price: 200, count: 3 },
+        ],
+        totalPrice: 1400,
+    },
+    {
+        transaction_id: 'PN0001265',
+        date: '2021-10-10 13:40',
+        payment: 'Kaspi QR',
+        products: [
+            { name: 'Product 1', price: 100, count: 2 },
+            { name: 'Product 2', price: 200, count: 3 },
+        ],
+        totalPrice: 1400,
+    },
+    {
+        transaction_id: 'PN0001265',
+        date: '2021-10-10 13:40',
+        payment: 'Kaspi QR',
+        products: [
+            { name: 'Product 1', price: 100, count: 2 },
+            { name: 'Product 2', price: 200, count: 3 },
+        ],
+        totalPrice: 1400,
+    },
+    {
+        transaction_id: 'PN0001265',
+        date: '2021-10-10 13:40',
+        payment: 'Kaspi QR',
+        products: [
+            { name: 'Product 1', price: 100, count: 2 },
+            { name: 'Product 2', price: 200, count: 3 },
+        ],
+        totalPrice: 1400,
+    },
+    {
+        transaction_id: 'PN0001265',
+        date: '2021-10-10 13:40',
+        payment: 'Kaspi QR',
+        products: [
+            { name: 'Product 1', price: 100, count: 2 },
+            { name: 'Product 2', price: 200, count: 3 },
+        ],
+        totalPrice: 1400,
+    },
+    {
+        transaction_id: 'PN0001265',
+        date: '2021-10-10 13:40',
+        payment: 'Kaspi QR',
+        products: [
+            { name: 'Product 1', price: 100, count: 2 },
+            { name: 'Product 2', price: 200, count: 3 },
+        ],
+        totalPrice: 1400,
+    },
+    {
+        transaction_id: 'PN0001265',
+        date: '2021-10-10 13:40',
+        payment: 'Kaspi QR',
+        products: [
+            { name: 'Product 1', price: 100, count: 2 },
+            { name: 'Product 2', price: 200, count: 3 },
+        ],
+        totalPrice: 1400,
+    },
+    {
+        transaction_id: 'PN0001265',
+        date: '2021-10-10 13:40',
+        payment: 'Kaspi QR',
+        products: [
+            { name: 'Product 1', price: 100, count: 2 },
+            { name: 'Product 2', price: 200, count: 3 },
+        ],
+        totalPrice: 1400,
+    },
+    {
+        transaction_id: 'PN0001265',
+        date: '2021-10-10 13:40',
+        payment: 'Kaspi QR',
+        products: [
+            { name: 'Product 1', price: 100, count: 2 },
+            { name: 'Product 2', price: 200, count: 3 },
+        ],
+        totalPrice: 1400,
+    },
+    {
+        transaction_id: 'PN0001265',
+        date: '2021-10-10 13:40',
+        payment: 'Kaspi QR',
+        products: [
+            { name: 'Product 1', price: 100, count: 2 },
+            { name: 'Product 2', price: 200, count: 3 },
+        ],
+        totalPrice: 1400,
+    },
+    {
+        transaction_id: 'PN0001265',
+        date: '2021-10-10 13:40',
+        payment: 'Kaspi QR',
+        products: [
+            { name: 'Product 1', price: 100, count: 2 },
+            { name: 'Product 2', price: 200, count: 3 },
+        ],
+        totalPrice: 1400,
+    },
+
+    {
+        transaction_id: 'PN0001265',
+        date: '2021-10-10 13:40',
+        payment: 'Kaspi QR',
+        products: [
+            { name: 'Product 1', price: 100, count: 2 },
+            { name: 'Product 2', price: 200, count: 3 },
+        ],
+        totalPrice: 1400,
+    },
 ]
 
 export const CashBoxes = () => {
     const { activeTab, handleTabChange } = useActiveTab(routeToTab)
-    const [currentPage, setCurrentPage] = useState(0)
-    const rowsPerPage = 10
-
-    const handleNextPage = () => {
-        if (currentPage < Math.ceil(transactions.length / rowsPerPage) - 1) {
-            setCurrentPage(prevPage => prevPage + 1)
-        }
-    }
-
-    const handlePreviousPage = () => {
-        if (currentPage > 0) {
-            setCurrentPage(prevPage => prevPage - 1)
-        }
-    }
-
-    const paginatedRows = transactions.slice(
-        currentPage * rowsPerPage,
-        (currentPage + 1) * rowsPerPage,
-    )
 
     return (
         <Box>
@@ -103,6 +185,7 @@ export const CashBoxes = () => {
                         textTransform: 'none',
                     }}
                 >
+                    <img src={add} alt="" style={{ marginLeft: '-10px', marginRight: '10px' }} />
                     CashBox
                 </Button>
             </Box>
@@ -146,87 +229,11 @@ export const CashBoxes = () => {
                     </Tabs>
                 </Box>
                 <Box sx={{ flex: 1 }}>
-                    <CustomTabPanel value={activeTab} index={0}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                marginBottom: '20px',
-                            }}
-                        >
-                            <Box>
-                                <Typography variant="h6">Transactions</Typography>
-                                <Typography variant="inherit">1456</Typography>
-                            </Box>
-                        </Box>
-
-                        <TableContainer sx={{ maxHeight: 650, overflowY: 'auto' }}>
-                            <Table
-                                aria-labelledby="tableTitle"
-                                stickyHeader
-                                component="div"
-                                sx={{
-                                    '--TableCell-headBackground': '#f4f6f8',
-                                    '--Table-headerUnderlineThickness': '1px',
-                                    '--TableRow-hoverBackground': '#e8eaf0',
-                                    '--TableCell-paddingY': '8px',
-                                    '--TableCell-paddingX': '16px',
-                                    border: '1px solid #e0e0e0',
-                                    borderRadius: '20px',
-                                    padding: '10px',
-                                    backgroundColor: '#ffffff',
-                                }}
-                            >
-                                <TableHead>
-                                    <TableRow
-                                        sx={{ backgroundColor: COLORS.lightBlue, fontWeight: 700 }}
-                                    >
-                                        <TableCell sx={{ fontWeight: 700 }}>
-                                            Transaction ID
-                                        </TableCell>
-                                        <TableCell sx={{ fontWeight: 700 }}>Date</TableCell>
-                                        <TableCell sx={{ fontWeight: 700 }}>Payment</TableCell>
-                                        <TableCell sx={{ fontWeight: 700 }}>Total Price</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {paginatedRows.map(transaction => (
-                                        <TableRow key={transaction.transaction_id}>
-                                            <TableCell>{transaction.transaction_id}</TableCell>
-                                            <TableCell>{transaction.date}</TableCell>
-                                            <TableCell>{transaction.payment}</TableCell>
-                                            <TableCell>{transaction.totalPrice}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                marginTop: '20px',
-                            }}
-                        >
-                            <IconButton onClick={handlePreviousPage} disabled={currentPage === 0}>
-                                <KeyboardArrowLeft />
-                            </IconButton>
-                            <Typography variant="body2">{`${currentPage + 1} / ${Math.ceil(
-                                transactions.length / rowsPerPage,
-                            )}`}</Typography>
-                            <IconButton
-                                onClick={handleNextPage}
-                                disabled={
-                                    currentPage === Math.ceil(transactions.length / rowsPerPage) - 1
-                                }
-                            >
-                                <KeyboardArrowRight />
-                            </IconButton>
-                        </Box>
-                    </CustomTabPanel>
+                    {cashBoxes.map((cashBox, index) => (
+                        <CustomTabPanel value={activeTab} index={index}>
+                            <Transactions transactions={transactions} cashBox={cashBox} />
+                        </CustomTabPanel>
+                    ))}
                     {/* Repeat CustomTabPanel for other tabs if necessary */}
                 </Box>
             </Box>

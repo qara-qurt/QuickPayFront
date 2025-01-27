@@ -56,6 +56,7 @@ export const MainPage = () => {
     return (
         <Box
             sx={{
+                fontFamily: 'Nunito Sans, Arial, sans-serif',
                 display: 'flex',
                 backgroundColor: COLORS.lightBlue,
                 width: '100%',

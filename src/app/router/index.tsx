@@ -3,6 +3,7 @@ import { SignInPage } from '@/pages/sign-in'
 import { SignUpPage } from '@/pages/sign-up'
 import { MainPage } from '@/pages/main'
 import { Layout } from '@/shared/ui'
+import { CashBoxPage } from '@/pages/cashbox'
 
 const mainRoutes = ['/all', '/cash-boxes', '/products', '/employees', '/analytics']
 
@@ -18,21 +19,15 @@ export const router = createBrowserRouter([
         ],
     })),
     {
+        path: '/cash-boxes/:id/view',
+        element: <CashBoxPage />,
+    },
+    {
         path: '/sign-in',
-        children: [
-            {
-                index: true,
-                element: <SignInPage />,
-            },
-        ],
+        element: <SignInPage />,
     },
     {
         path: '/sign-up',
-        children: [
-            {
-                index: true,
-                element: <SignUpPage />,
-            },
-        ],
+        element: <SignUpPage />,
     },
 ])
