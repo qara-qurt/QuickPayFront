@@ -4,9 +4,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 import blue_logo from '@/assets/blue_logo.svg'
 import banner from '@/assets/banner.png'
 import arrow from '@/assets/arrow_back.svg'
+import { useEffect } from 'react'
+import { Client } from '@stomp/stompjs'
+import SockJS from 'sockjs-client'
 
 const cashBox = {
-    id: 'PN0001265',
+    id: 'PN0001345',
     name: 'Cash Box - 1',
 }
 
@@ -33,6 +36,8 @@ const clothes = [
     },
 ]
 
+const token =
+    'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX1VTRVIiXSwidXNlcm5hbWUiOiJkaWFzIiwic3ViIjoiZGlhcyIsImlhdCI6MTczODAwMDA1NSwiZXhwIjoxNzM4MDA3MjU1fQ.oOpYFqWZMeTSqE9M_XrIm6FHgYBcvcuedMjxuIsyh34'
 export const CashBoxPage = () => {
     const { id } = useParams<{ id: string }>()
     const navigate = useNavigate()
@@ -40,6 +45,51 @@ export const CashBoxPage = () => {
     const handleGoBack = () => {
         navigate(-1)
     }
+
+    useEffect(() => {
+        const client = new Client({
+            webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+            connectHeaders: {
+                Authorization: `Bearer ${token}`,
+            },
+            onConnect: () => {
+                console.log('Connected to WebSocket server')
+                client.subscribe('/topic/cash-boxes', message => {
+                    console.log('Received message:', message.body)
+                })
+            },
+            onStompError: error => {
+                console.error('STOMP Error:', error)
+            },
+        })
+
+        client.activate()
+
+        setTimeout(() => {
+            if (client.connected) {
+                client.publish({
+                    destination: '/app/test',
+                    body: JSON.stringify({ message: 'Hello, this is a test message!' }),
+                })
+                client.publish({
+                    destination: '/app/test',
+                    body: JSON.stringify({ message: 'Hello, this is a test message!' }),
+                })
+                client.publish({
+                    destination: '/app/test',
+                    body: JSON.stringify({ message: 'Hello, this is a test message!' }),
+                })
+                client.publish({
+                    destination: '/app/test',
+                    body: JSON.stringify({ message: 'Hello, this is a test message!' }),
+                })
+            }
+        }, 2000)
+
+        return () => {
+            client.deactivate()
+        }
+    }, [])
 
     return (
         <Box
