@@ -4,6 +4,10 @@ export interface User {
     name: string
     surname: string
     email: string
+    roles: string[]
+    is_active: boolean
+    created_at: string
+    updated_at: string
     token: string
 }
 
@@ -25,5 +29,6 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
+    user: User
     token: string
 }

@@ -13,7 +13,6 @@ export const Layout = () => {
         >
             <Box
                 sx={{
-                    maxWidth: '1440px',
                     margin: '0 auto',
                     minHeight: '100vh',
                 }}

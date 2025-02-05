@@ -36,8 +36,8 @@ const clothes = [
     },
 ]
 
-const token =
-    'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX1VTRVIiXSwidXNlcm5hbWUiOiJkaWFzIiwic3ViIjoiZGlhcyIsImlhdCI6MTczODAwMDA1NSwiZXhwIjoxNzM4MDA3MjU1fQ.oOpYFqWZMeTSqE9M_XrIm6FHgYBcvcuedMjxuIsyh34'
+const token = localStorage.getItem('token') || ''
+
 export const CashBoxPage = () => {
     const { id } = useParams<{ id: string }>()
     const navigate = useNavigate()

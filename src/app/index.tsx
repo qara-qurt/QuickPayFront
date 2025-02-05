@@ -1,8 +1,9 @@
 import { Provider } from 'react-redux'
-import { router } from './router'
 import { createTheme, ThemeProvider } from '@mui/material'
 import { store } from './store'
-import { RouterProvider } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
+import { Router } from './router/Router'
+import { CheckRoute } from './router/CheckRoute'
 
 // THEME
 const theme = createTheme({
@@ -34,7 +35,11 @@ export const App = () => {
     return (
         <ThemeProvider theme={theme}>
             <Provider store={store}>
-                <RouterProvider router={router} />
+                <BrowserRouter>
+                    <CheckRoute>
+                        <Router />
+                    </CheckRoute>
+                </BrowserRouter>
             </Provider>
         </ThemeProvider>
     )

@@ -2,32 +2,10 @@ import { Box, Typography } from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom'
 import arrow from '@/assets/arrow.svg'
 import { COLORS } from '@/shared/style/colors'
-import { CashBoxCard, EmployeeCard } from '@/shared/ui'
+import { CashBoxCard } from '@/shared/ui'
 import { ProductCard } from '@/shared/ui/cards/ProductCard'
-import { useActiveTab } from '@/pages/main/hooks/useActiveTab'
+import EmployeeTable from './EmployeeTable'
 
-const employees = [
-    {
-        name: 'Serikov',
-        surname: 'Dias',
-        position: 'CEO',
-    },
-    {
-        name: 'Koksegen',
-        surname: 'Erbol',
-        position: 'Programmer',
-    },
-    {
-        name: 'John',
-        surname: 'Doe',
-        position: 'CEO',
-    },
-    {
-        name: 'John',
-        surname: 'Doe',
-        position: 'CEO',
-    },
-]
 const products = [
     {
         name: 'Product 1',
@@ -38,11 +16,6 @@ const products = [
         name: 'Product 2',
         price: 200,
         totalCount: 20,
-    },
-    {
-        name: 'Product 3',
-        price: 300,
-        totalCount: 30,
     },
     {
         name: 'Product 3',
@@ -113,55 +86,7 @@ export const All = () => {
                         padding: '20px 30px',
                     }}
                 >
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            margin: '10px 0',
-                        }}
-                    >
-                        <Typography variant="h6">Employees</Typography>
-                        <Box
-                            onClick={() => {
-                                navigate('#')
-                            }}
-                            sx={{
-                                display: 'flex',
-                            }}
-                        >
-                            <Link
-                                to="/employees"
-                                style={{
-                                    textDecoration: 'none',
-                                    color: COLORS.blue,
-                                    fontWeight: 600,
-                                    fontFamily: 'Nunito Sans, Arial, sans-serif',
-                                }}
-                            >
-                                View all
-                            </Link>
-                            <img src={arrow} alt="" />
-                        </Box>
-                    </Box>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'flex-start',
-                            alignItems: 'center',
-                            flexWrap: 'wrap',
-                            gap: '20px',
-                            marginTop: '20px',
-                        }}
-                    >
-                        {employees.length > 0 ? (
-                            employees.map((employee, index) => (
-                                <EmployeeCard key={index} employee={employee} />
-                            ))
-                        ) : (
-                            <Typography variant="body1">No employees</Typography>
-                        )}
-                    </Box>
+                    <EmployeeTable />
                 </Box>
                 <Box
                     sx={{

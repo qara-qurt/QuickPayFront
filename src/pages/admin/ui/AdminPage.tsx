@@ -12,23 +12,24 @@ import { COLORS } from '@/shared/style/colors'
 import { Link, useNavigate } from 'react-router-dom'
 import { All } from '@/widgets/all'
 import { CashBoxes } from '@/widgets/cash_boxes'
-import { useActiveTab } from '../hooks/useActiveTab'
 import { useDispatch } from 'react-redux'
 import { logout } from '@/features/auth/model/authSlice'
+import { useActiveTab } from '@/pages/main/hooks/useActiveTab'
+import { Companies } from '@/widgets/companies/ui/Companies'
 
 const routeToTab: Record<string, number> = {
-    '/all': 0,
-    '/cash-boxes': 1,
-    '/products': 2,
-    '/employees': 3,
-    '/analytics': 4,
+    '/admin-companies': 0,
+    '/admin-cash-boxes': 1,
+    '/admin-products': 2,
+    '/admin-employees': 3,
+    '/admin-analytics': 4,
 }
 
 const tabs = [
     {
-        name: 'All',
+        name: 'Companies',
         icon: all,
-        component: <All />,
+        component: <Companies />,
     },
     {
         name: 'Cash Boxes',
@@ -52,7 +53,7 @@ const tabs = [
     },
 ]
 
-export const MainPage = () => {
+export const AdminPage = () => {
     const { activeTab, handleTabChange } = useActiveTab(routeToTab)
     const navigate = useNavigate()
 
@@ -116,6 +117,7 @@ export const MainPage = () => {
                                 iconPosition="start"
                                 sx={{
                                     marginLeft: '-10px',
+                                    width: '240px',
                                 }}
                             />
                         ))}

@@ -6,6 +6,7 @@ import { useState } from 'react'
 export const useAuth = () => {
     const dispatch: AppDispatch = useDispatch()
     const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const [isAdmin, setIsAdmin] = useState(false)
     const [error, setError] = useState('')
 
     const handleSignIn = async (username: string, password: string) => {
@@ -14,7 +15,8 @@ export const useAuth = () => {
 
             if (loginUser.fulfilled.match(result)) {
                 const user = result.payload
-                if (user.token) {
+                setIsAdmin(user.roles.includes('ADMIN'))
+                if (user) {
                     localStorage.setItem('token', user.token)
                     setIsAuthenticated(true)
                 }
@@ -47,5 +49,5 @@ export const useAuth = () => {
         }
     }
 
-    return { isAuthenticated, error, handleSignIn, handleRegister }
+    return { isAdmin, isAuthenticated, error, handleSignIn, handleRegister }
 }

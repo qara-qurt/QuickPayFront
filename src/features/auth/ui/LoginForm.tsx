@@ -11,7 +11,7 @@ export const LoginForm = () => {
         username: '',
         password: '',
     })
-    const { isAuthenticated, error, handleSignIn } = useAuth()
+    const { isAdmin, isAuthenticated, error, handleSignIn } = useAuth()
     const navigate = useNavigate()
 
     const [checkbox, setCheckbox] = useState(false)
@@ -21,8 +21,10 @@ export const LoginForm = () => {
     }
 
     useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/dashboard')
+        if (isAuthenticated && isAdmin) {
+            navigate('/admin-companies')
+        } else if (isAuthenticated) {
+            navigate('/all')
         }
     }, [isAuthenticated])
 

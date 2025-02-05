@@ -230,7 +230,7 @@ export const CashBoxes = () => {
                 </Box>
                 <Box sx={{ flex: 1 }}>
                     {cashBoxes.map((cashBox, index) => (
-                        <CustomTabPanel value={activeTab} index={index}>
+                        <CustomTabPanel value={activeTab} index={index} key={cashBox.id}>
                             <Transactions transactions={transactions} cashBox={cashBox} />
                         </CustomTabPanel>
                     ))}

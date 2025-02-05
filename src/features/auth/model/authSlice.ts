@@ -1,8 +1,8 @@
-// src/store/auth/authSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import { authApi } from '@/shared/api/auth'
 import { LoginRequest, RegisterRequest, User } from '@/shared/api/auth/types'
 import { AuthState } from './types'
+import { log } from 'console'
 
 export const registerUser = createAsyncThunk<User, RegisterRequest, { rejectValue: string }>(
     'auth/registerUser',
@@ -12,13 +12,17 @@ export const registerUser = createAsyncThunk<User, RegisterRequest, { rejectValu
             return {
                 id: registerResponse.id,
                 username: userData.username,
-                name: userData.name,
+                name: userData.username,
                 surname: userData.surname,
                 email: userData.email,
-                token: '', // Изначально токен пустой, его добавим после логина
+                roles: [],
+                is_active: false,
+                created_at: '',
+                updated_at: '',
+                token: '',
             }
         } catch (error: any) {
-            return rejectWithValue(error.response?.data || 'Registration failed')
+            return rejectWithValue(error.response?.data || 'Registration failed') as any
         }
     },
 )
@@ -28,17 +32,21 @@ export const loginUser = createAsyncThunk<User, LoginRequest, { rejectValue: str
     async (userData: LoginRequest, { rejectWithValue }) => {
         try {
             const loginResponse = await authApi.login(userData)
-            // Сохраняем токен в ответе на логин
+            // Сохраняем токен и информацию о пользователе
             return {
-                id: '', // Можно оставить пустым, если id не приходит с токеном
-                username: userData.username,
-                name: '', // Получим или запросим после логина
-                surname: '',
-                email: '', // Можно запросить дополнительные данные о пользователе
-                token: loginResponse.token, // Сохраняем токен из LoginResponse
+                id: loginResponse.user.id,
+                username: loginResponse.user.username,
+                name: loginResponse.user.name,
+                surname: loginResponse.user.surname,
+                email: loginResponse.user.email,
+                roles: loginResponse.user.roles,
+                is_active: loginResponse.user.is_active,
+                created_at: loginResponse.user.created_at,
+                updated_at: loginResponse.user.updated_at,
+                token: loginResponse.token,
             }
         } catch (error: any) {
-            return rejectWithValue(error.response?.data || 'Login failed')
+            return rejectWithValue(error.response?.data || 'Login failed') as any
         }
     },
 )
@@ -51,14 +59,33 @@ const initialState: AuthState = {
     token: '',
 }
 
+// Проверяем наличие данных в localStorage при инициализации
+const localStorageUser = localStorage.getItem('user')
+const localStorageToken = localStorage.getItem('token')
+
+const parsedUser = localStorageUser ? JSON.parse(localStorageUser) : null
+
+const initialStateWithLocalStorage: AuthState = {
+    ...initialState,
+    user: parsedUser,
+    token: localStorageToken || '',
+    isAuthenticated: !!localStorageToken,
+}
+
 export const authSlice = createSlice({
     name: 'auth',
-    initialState,
+    initialState: initialStateWithLocalStorage,
     reducers: {
+        login: (state, action: PayloadAction<User>) => {
+            state.user = action.payload
+            state.isAuthenticated = true
+        },
         logout: state => {
+            console.log('LOGOUT')
             state.user = null
             state.isAuthenticated = false
             state.token = ''
+            localStorage.removeItem('token')
         },
     },
     extraReducers: builder => {
@@ -87,14 +114,17 @@ export const authSlice = createSlice({
                 state.token = action.payload.token
                 state.isAuthenticated = true
                 state.loading = false
+                localStorage.setItem('token', action.payload.token)
             })
             .addCase(loginUser.rejected, (state, action: PayloadAction<string | undefined>) => {
                 state.error = action.payload || 'An error occurred during login'
                 state.loading = false
+
+                localStorage.removeItem('token')
             })
     },
 })
 
-export const { logout } = authSlice.actions
+export const { logout, login } = authSlice.actions
 
 export default authSlice.reducer
