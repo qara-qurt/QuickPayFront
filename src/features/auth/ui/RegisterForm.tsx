@@ -1,5 +1,5 @@
 import { Box, Button, Alert } from '@mui/material'
-import { useForm } from '@/features/auth/hooks/useForm'
+import { useForm } from '@/shared/hooks/useForm'
 import { useAuth } from '../hooks/useAuth'
 import { useState } from 'react'
 import { CustomTextField } from '@/shared/ui'
@@ -20,11 +20,11 @@ export const RegisterForm = () => {
 
     const onRegister = () => {
         handleRegister({
-            name: formState.name,
-            surname: formState.surname,
-            email: formState.email,
-            username: formState.username,
-            password: formState.password,
+            name: formState.name as string,
+            surname: formState.surname as string,
+            email: formState.email as string,
+            username: formState.username as string,
+            password: formState.password as string,
         })
         setIsNextStep(true)
     }

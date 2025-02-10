@@ -1,7 +1,10 @@
+import { useEffect, useState } from 'react'
+import { companyApi } from '@/shared/api'
 import { COLORS } from '@/shared/style/colors'
 import {
     Box,
     Button,
+    Dialog,
     IconButton,
     Table,
     TableBody,
@@ -10,58 +13,84 @@ import {
     TableHead,
     TableRow,
     Typography,
+    TableSortLabel,
+    TextField,
 } from '@mui/material'
-import { useState } from 'react'
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
-
-const companies = [
-    {
-        id: '1',
-        bin: '123456789',
-        name: 'TechCorp',
-        isActive: true,
-        createdAt: '2021-10-10',
-        updatedAt: '2021-10-10',
-    },
-    {
-        id: '1',
-        bin: '123456789',
-        name: 'TechCorp',
-        isActive: true,
-        createdAt: '2021-10-10',
-        updatedAt: '2021-10-10',
-    },
-    {
-        id: '1',
-        bin: '123456789',
-        name: 'TechCorp',
-        isActive: true,
-        createdAt: '2021-10-10',
-        updatedAt: '2021-10-10',
-    },
-    // Add more companies here...
-]
+import { CreateCompany } from '@/features/company'
+import { Company as TCompany } from '@/shared/api/company/types'
+import { Company } from './Company'
+import add from '@/assets/add.svg'
 
 export const Companies = () => {
+    const [open, setOpen] = useState(false)
+    const [totalCount, setTotalCount] = useState(0)
+    const [companies, setCompanies] = useState<TCompany[]>([])
     const [currentPage, setCurrentPage] = useState(0)
     const rowsPerPage = 20
+    const [totalPages, setTotalPages] = useState(0)
+    const [sortField, setSortField] = useState<string>('id')
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+    const [searchQuery, setSearchQuery] = useState('')
+
+    const fetchCompanies = async (
+        page: number,
+        field: string,
+        order: 'asc' | 'desc',
+        name: string,
+    ) => {
+        try {
+            const { data } = await companyApi.getCompanies(
+                page + 1,
+                rowsPerPage,
+                field,
+                order,
+                name,
+            )
+            setCompanies(data.content)
+            setTotalPages(data.totalPages)
+            setTotalCount(data.totalElements)
+        } catch (error) {
+            console.error('Ошибка при получении компаний', error)
+        }
+    }
+
+    useEffect(() => {
+        fetchCompanies(currentPage, sortField, sortOrder, searchQuery)
+    }, [currentPage, sortField, sortOrder])
+
+    const handleOpen = () => {
+        setOpen(!open)
+    }
 
     const handleNextPage = () => {
-        if (currentPage < Math.ceil(companies.length / rowsPerPage) - 1) {
-            setCurrentPage(prevPage => prevPage + 1)
+        if (currentPage < totalPages - 1) {
+            setCurrentPage(prev => prev + 1)
         }
     }
 
     const handlePreviousPage = () => {
         if (currentPage > 0) {
-            setCurrentPage(prevPage => prevPage - 1)
+            setCurrentPage(prev => prev - 1)
         }
     }
 
-    const paginatedRows = companies.slice(
-        currentPage * rowsPerPage,
-        (currentPage + 1) * rowsPerPage,
-    )
+    const handleUpdate = () => {
+        fetchCompanies(currentPage, sortField, sortOrder, searchQuery)
+    }
+
+    const handleSort = (field: string) => {
+        const isAsc = sortField === field && sortOrder === 'asc'
+        setSortOrder(isAsc ? 'desc' : 'asc')
+        setSortField(field)
+    }
+
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value
+        setSearchQuery(val)
+        setCurrentPage(0)
+        fetchCompanies(0, sortField, sortOrder, val)
+    }
 
     return (
         <>
@@ -75,9 +104,23 @@ export const Companies = () => {
             >
                 <Box>
                     <Typography variant="h6">Companies</Typography>
-                    <Typography variant="inherit">{companies.length}</Typography>
+                    <Typography variant="body2">{`Total: ${totalCount}`}</Typography>
                 </Box>
                 <Box>
+                    <TextField
+                        label="Search"
+                        variant="outlined"
+                        size="small"
+                        value={searchQuery}
+                        onChange={handleSearch}
+                        sx={{
+                            marginRight: '10px',
+                            borderRadius: '20px',
+                            '& .MuiOutlinedInput-root': {
+                                borderRadius: '8px',
+                            },
+                        }}
+                    />
                     <Button
                         variant="contained"
                         sx={{
@@ -87,53 +130,62 @@ export const Companies = () => {
                             backgroundColor: COLORS.blue,
                             textTransform: 'none',
                         }}
+                        onClick={handleOpen}
                     >
+                        <img src={add} alt="" style={{ marginRight: '5px' }} />
                         Create
                     </Button>
                 </Box>
+                <Dialog
+                    open={open}
+                    onClose={handleOpen}
+                    sx={{ '& .MuiPaper-root': { borderRadius: '20px' } }}
+                >
+                    <CreateCompany handleOpen={handleOpen} onUpdate={handleUpdate} />
+                </Dialog>
             </Box>
 
-            <TableContainer sx={{ maxHeight: '75vh', overflowY: 'auto' }}>
-                <Table
-                    aria-labelledby="tableTitle"
-                    stickyHeader
-                    component="div"
-                    sx={{
-                        '--TableCell-headBackground': '#f4f6f8',
-                        '--Table-headerUnderlineThickness': '1px',
-                        '--TableRow-hoverBackground': '#e8eaf0',
-                        '--TableCell-paddingY': '8px',
-                        '--TableCell-paddingX': '16px',
-                        border: '1px solid #e0e0e0',
-                        borderRadius: '20px',
-                        padding: '10px',
-                        backgroundColor: '#ffffff',
-                    }}
-                >
+            <TableContainer
+                sx={{
+                    maxHeight: '75vh',
+                    overflowY: 'auto',
+                    backgroundColor: COLORS.white,
+                    borderRadius: '20px',
+                }}
+            >
+                <Table aria-labelledby="tableTitle" stickyHeader>
                     <TableHead>
                         <TableRow sx={{ backgroundColor: COLORS.lightBlue, fontWeight: 700 }}>
-                            <TableCell sx={{ fontWeight: 700 }}>Company ID</TableCell>
-                            <TableCell sx={{ fontWeight: 700 }}>Name</TableCell>
-                            <TableCell sx={{ fontWeight: 700 }}>BIN</TableCell>
-                            <TableCell sx={{ fontWeight: 700 }}>Is Active</TableCell>
-                            <TableCell sx={{ fontWeight: 700 }}>Created At</TableCell>
+                            {[
+                                { label: 'Company ID', field: 'id' },
+                                { label: 'Name', field: 'name' },
+                                { label: 'BIN', field: 'bin' },
+                                { label: 'Is Active', field: 'isActive' },
+                                { label: 'Created At', field: 'createdAt' },
+                                { label: 'Updated At', field: 'updatedAt' },
+                            ].map(({ label, field }) => (
+                                <TableCell key={field} sx={{ fontWeight: 700 }}>
+                                    <TableSortLabel
+                                        active={sortField === field}
+                                        direction={sortField === field ? sortOrder : 'asc'}
+                                        onClick={() => handleSort(field)}
+                                    >
+                                        {label}
+                                    </TableSortLabel>
+                                </TableCell>
+                            ))}
+                            <TableCell sx={{ fontWeight: 700 }}>Edit</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {paginatedRows.map(company => (
-                            <TableRow key={company.id}>
-                                <TableCell>{company.id}</TableCell>
-                                <TableCell>{company.name}</TableCell>
-                                <TableCell>{company.bin}</TableCell>
-                                <TableCell>{company.isActive ? 'YES' : 'NO'}</TableCell>
-                                <TableCell>{company.createdAt}</TableCell>
-                            </TableRow>
+                        {companies.map(company => (
+                            <Company company={company} key={company.id} onUpdate={handleUpdate} />
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
 
-            {companies.length > 20 && (
+            {totalPages > 1 && (
                 <Box
                     sx={{
                         display: 'flex',
@@ -145,13 +197,8 @@ export const Companies = () => {
                     <IconButton onClick={handlePreviousPage} disabled={currentPage === 0}>
                         <KeyboardArrowLeft />
                     </IconButton>
-                    <Typography variant="body2">{`${currentPage + 1} / ${Math.ceil(
-                        companies.length / rowsPerPage,
-                    )}`}</Typography>
-                    <IconButton
-                        onClick={handleNextPage}
-                        disabled={currentPage === Math.ceil(companies.length / rowsPerPage) - 1}
-                    >
+                    <Typography variant="body2">{`${currentPage + 1} / ${totalPages}`}</Typography>
+                    <IconButton onClick={handleNextPage} disabled={currentPage >= totalPages - 1}>
                         <KeyboardArrowRight />
                     </IconButton>
                 </Box>

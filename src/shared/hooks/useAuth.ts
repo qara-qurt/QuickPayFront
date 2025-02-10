@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { authApi } from '../api/auth'
+import { authApi } from '../api'
 import { useDispatch } from 'react-redux'
 import { login } from '@/features/auth/model/authSlice'
 
@@ -20,7 +20,6 @@ export const useAuth = () => {
                 dispatch(login(data))
             } catch (error) {
                 localStorage.removeItem('token')
-                navigate('/sign-in')
             }
             setIsLoading(false)
         }

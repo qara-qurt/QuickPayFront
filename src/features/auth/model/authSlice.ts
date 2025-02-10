@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import { authApi } from '@/shared/api/auth'
+import { authApi } from '@/shared/api'
 import { LoginRequest, RegisterRequest, User } from '@/shared/api/auth/types'
 import { AuthState } from './types'
 import { log } from 'console'
