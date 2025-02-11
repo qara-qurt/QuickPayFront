@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react'
-import { companyApi } from '@/shared/api'
 import { COLORS } from '@/shared/style/colors'
 import {
     Box,
@@ -12,55 +10,53 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Typography,
     TableSortLabel,
     TextField,
+    Typography,
 } from '@mui/material'
-import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
-import { CreateCompany } from '@/features/company'
-import { Company as TCompany } from '@/shared/api/company/types'
-import { Company } from './Company'
+import { useEffect, useState } from 'react'
+import { CashBoxAdmin } from './CashBoxAdmin'
+import { CashBox } from '@/shared/api/cashbox/types'
+import { cashBoxApi } from '@/shared/api'
 import add from '@/assets/add.svg'
+import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
+import { CreateCashBox } from '@/features/cashbox'
 
-export const Companies = () => {
+export const CashBoxesAdmin = () => {
     const [open, setOpen] = useState(false)
-    const [totalCount, setTotalCount] = useState(0)
-    const [companies, setCompanies] = useState<TCompany[]>([])
+    const [cashBoxes, setCashBoxes] = useState<CashBox[]>([])
     const [currentPage, setCurrentPage] = useState(0)
+    const [totalCount, setTotalCount] = useState(0)
     const rowsPerPage = 20
     const [totalPages, setTotalPages] = useState(0)
     const [sortField, setSortField] = useState<string>('id')
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
     const [searchQuery, setSearchQuery] = useState('')
 
-    const fetchCompanies = async (
+    const handleOpen = () => {
+        setOpen(!open)
+    }
+
+    const fetchCashBoxes = async (
         page: number,
         field: string,
         order: 'asc' | 'desc',
         name: string,
     ) => {
         try {
-            const { data } = await companyApi.getCompanies(
+            const { data } = await cashBoxApi.getCashboxes(
                 page + 1,
                 rowsPerPage,
                 field,
                 order,
                 name,
             )
-            setCompanies(data.content)
+            setCashBoxes(data.content)
             setTotalPages(data.totalPages)
             setTotalCount(data.totalElements)
         } catch (error) {
-            console.error('Ошибка при получении компаний', error)
+            console.error('Ошибка при получении cash-boxes', error)
         }
-    }
-
-    useEffect(() => {
-        fetchCompanies(currentPage, sortField, sortOrder, searchQuery)
-    }, [currentPage, sortField, sortOrder])
-
-    const handleOpen = () => {
-        setOpen(!open)
     }
 
     const handleNextPage = () => {
@@ -76,7 +72,7 @@ export const Companies = () => {
     }
 
     const handleUpdate = () => {
-        fetchCompanies(currentPage, sortField, sortOrder, searchQuery)
+        fetchCashBoxes(currentPage, sortField, sortOrder, searchQuery)
     }
 
     const handleSort = (field: string) => {
@@ -89,11 +85,15 @@ export const Companies = () => {
         const val = e.target.value
         setSearchQuery(val)
         setCurrentPage(0)
-        fetchCompanies(0, sortField, sortOrder, val)
+        fetchCashBoxes(0, sortField, sortOrder, val)
     }
 
+    useEffect(() => {
+        fetchCashBoxes(currentPage, sortField, sortOrder, searchQuery)
+    }, [currentPage, sortField, sortOrder])
+
     return (
-        <>
+        <Box>
             <Box
                 sx={{
                     display: 'flex',
@@ -103,7 +103,7 @@ export const Companies = () => {
                 }}
             >
                 <Box>
-                    <Typography variant="h6">Companies</Typography>
+                    <Typography variant="h6">CashBoxes</Typography>
                     <Typography variant="body2">{`Total: ${totalCount}`}</Typography>
                 </Box>
                 <Box>
@@ -142,50 +142,56 @@ export const Companies = () => {
                     onClose={handleOpen}
                     sx={{ '& .MuiPaper-root': { borderRadius: '20px' } }}
                 >
-                    <CreateCompany handleOpen={handleOpen} onUpdate={handleUpdate} />
+                    <CreateCashBox handleOpen={handleOpen} onUpdate={handleUpdate} />
                 </Dialog>
             </Box>
-
-            <TableContainer
-                sx={{
-                    maxHeight: '75vh',
-                    overflowY: 'auto',
-                    backgroundColor: COLORS.white,
-                    borderRadius: '20px',
-                }}
-            >
-                <Table aria-labelledby="tableTitle" stickyHeader>
-                    <TableHead>
-                        <TableRow sx={{ backgroundColor: COLORS.lightBlue, fontWeight: 700 }}>
-                            {[
-                                { label: 'Company ID', field: 'id' },
-                                { label: 'Name', field: 'name' },
-                                { label: 'BIN', field: 'bin' },
-                                { label: 'Is Active', field: 'isActive' },
-                                { label: 'Created At', field: 'createdAt' },
-                                { label: 'Updated At', field: 'updatedAt' },
-                            ].map(({ label, field }) => (
-                                <TableCell key={field} sx={{ fontWeight: 700 }}>
-                                    <TableSortLabel
-                                        active={sortField === field}
-                                        direction={sortField === field ? sortOrder : 'asc'}
-                                        onClick={() => handleSort(field)}
-                                    >
-                                        {label}
-                                    </TableSortLabel>
-                                </TableCell>
+            <Box>
+                <TableContainer
+                    sx={{
+                        maxHeight: '75vh',
+                        overflowY: 'auto',
+                        backgroundColor: COLORS.white,
+                        borderRadius: '20px',
+                    }}
+                >
+                    <Table aria-labelledby="tableTitle" stickyHeader>
+                        <TableHead>
+                            <TableRow sx={{ backgroundColor: COLORS.lightBlue, fontWeight: 700 }}>
+                                {[
+                                    { label: 'ID', field: 'id' },
+                                    { label: 'Cashbox_ID', field: 'cashbox_id' },
+                                    { label: 'Name', field: 'name' },
+                                    { label: 'Company ID', field: 'company_id' },
+                                    { label: 'Is Active', field: 'isActive' },
+                                    { label: 'Created At', field: 'createdAt' },
+                                    { label: 'Updated At', field: 'updatedAt' },
+                                ].map(({ label, field }) => (
+                                    <TableCell key={field} sx={{ fontWeight: 700 }}>
+                                        <TableSortLabel
+                                            active={sortField === field}
+                                            direction={sortField === field ? sortOrder : 'asc'}
+                                            onClick={() => handleSort(field)}
+                                        >
+                                            {label}
+                                        </TableSortLabel>
+                                    </TableCell>
+                                ))}
+                                <TableCell sx={{ fontWeight: 700 }}>Edit</TableCell>
+                                <TableCell sx={{ fontWeight: 700 }}>Delete</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {cashBoxes.map(cashBox => (
+                                <CashBoxAdmin
+                                    cashBox={cashBox}
+                                    key={cashBox.id}
+                                    onUpdate={handleUpdate}
+                                />
                             ))}
-                            <TableCell sx={{ fontWeight: 700 }}>Edit</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {companies.map(company => (
-                            <Company company={company} key={company.id} onUpdate={handleUpdate} />
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Box>
             {totalPages > 1 && (
                 <Box
                     sx={{
@@ -204,6 +210,6 @@ export const Companies = () => {
                     </IconButton>
                 </Box>
             )}
-        </>
+        </Box>
     )
 }

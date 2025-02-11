@@ -11,11 +11,11 @@ import analytics from '@/assets/analytics-menu.svg'
 import { COLORS } from '@/shared/style/colors'
 import { Link, useNavigate } from 'react-router-dom'
 import { All } from '@/widgets/all'
-import { CashBoxes } from '@/widgets/cash_boxes'
 import { useDispatch } from 'react-redux'
 import { logout } from '@/features/auth/model/authSlice'
 import { useActiveTab } from '@/pages/main/hooks/useActiveTab'
 import { Companies } from '@/widgets/companies/ui/Companies'
+import { CashBoxesAdmin } from '@/widgets/cash_boxes_admin/ui/CashBoxesAdmin'
 
 const routeToTab: Record<string, number> = {
     '/admin-companies': 0,
@@ -34,7 +34,7 @@ const tabs = [
     {
         name: 'Cash Boxes',
         icon: cashBox,
-        component: <CashBoxes />,
+        component: <CashBoxesAdmin />,
     },
     {
         name: 'Products',
@@ -42,7 +42,7 @@ const tabs = [
         component: <All />,
     },
     {
-        name: 'Employees',
+        name: 'Users',
         icon: emloyee,
         component: <All />,
     },
@@ -94,9 +94,13 @@ export const AdminPage = () => {
                     <Box
                         sx={{
                             marginBottom: '40px',
+                            display: 'flex',
+                            alignItems: 'flex-end',
+                            gap: '10px',
                         }}
                     >
                         <img src={blue_log} alt="logo" />
+                        <Typography variant="h6">Admin panel</Typography>
                     </Box>
                     <Tabs
                         value={activeTab}

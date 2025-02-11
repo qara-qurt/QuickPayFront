@@ -1,5 +1,5 @@
-import { companyApi } from '@/shared/api'
-import { Company as TCompany } from '@/shared/api/company/types'
+import { cashBoxApi } from '@/shared/api'
+import { CashBox } from '@/shared/api/cashbox/types'
 import { useForm } from '@/shared/hooks/useForm'
 import { COLORS } from '@/shared/style/colors'
 import { CustomTextField } from '@/shared/ui'
@@ -18,58 +18,67 @@ import {
 import { useState } from 'react'
 
 interface ICompanyProps {
-    company: TCompany
+    cashBox: CashBox
     onUpdate: () => void
 }
 
-export const Company: React.FC<ICompanyProps> = ({ company, onUpdate }) => {
+export const CashBoxAdmin: React.FC<ICompanyProps> = ({ cashBox, onUpdate }) => {
     const [open, setOpen] = useState(false)
+    const [openDelete, setOpenDelete] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
 
     const { formState, handleInputChange } = useForm({
-        bin: company.bin,
-        name: company.name,
-        is_active: company.is_active,
+        name: cashBox.name,
+        is_active: cashBox.is_active,
     })
 
     const handleOpen = () => {
         setOpen(!open)
     }
 
+    const handleOpenDelete = () => {
+        setOpenDelete(!openDelete)
+    }
     const handleUpdateCompany = async () => {
-        const updatedCompany = {
-            bin: formState.bin as string,
+        const updatedCashBox = {
             name: formState.name as string,
             is_active: formState.is_active as boolean,
         }
         try {
-            console.log(updatedCompany)
-            await companyApi.updateCompany(updatedCompany, Number(company.id))
-            setSuccess('Company updated')
-
+            await cashBoxApi.updateCashBox(updatedCashBox, Number(cashBox.id))
+            setSuccess('CashBox updated')
             onUpdate()
             setTimeout(() => setOpen(false), 1000)
         } catch (error) {
-            setError('Error updating company')
+            setError('Error updating cashbox')
+        }
+    }
+
+    const handleDelete = async () => {
+        try {
+            await cashBoxApi.deleteCashBox(Number(cashBox.id))
+            onUpdate()
+        } catch (error) {
+            setError('Error deleting cashbox')
         }
     }
 
     return (
-        <TableRow key={company.id}>
+        <TableRow key={cashBox.id}>
             <TableCell
                 sx={{
-                    borderLeft: company.is_active ? '5px solid #3fa944ba' : '5px solid #f13232',
+                    borderLeft: cashBox.is_active ? '5px solid #3fa944ba' : '5px solid #f13232',
                 }}
             >
-                {company.id}
+                {cashBox.id}
             </TableCell>
-
-            <TableCell>{company.name}</TableCell>
-            <TableCell>{company.bin}</TableCell>
-            <TableCell>{company.is_active ? 'YES' : 'NO'}</TableCell>
-            <TableCell>{company.created_at ? formatDate(company.created_at) : 'Unknown'}</TableCell>
-            <TableCell>{company.created_at ? formatDate(company.updated_at) : 'Unknown'}</TableCell>
+            <TableCell>{cashBox.cashbox_id}</TableCell>
+            <TableCell>{cashBox.name}</TableCell>
+            <TableCell>{cashBox.organization_id}</TableCell>
+            <TableCell>{cashBox.is_active ? 'YES' : 'NO'}</TableCell>
+            <TableCell>{cashBox.created_at ? formatDate(cashBox.created_at) : 'Unknown'}</TableCell>
+            <TableCell>{cashBox.created_at ? formatDate(cashBox.updated_at) : 'Unknown'}</TableCell>
             <TableCell>
                 <Button
                     variant="contained"
@@ -85,6 +94,68 @@ export const Company: React.FC<ICompanyProps> = ({ company, onUpdate }) => {
                     Edit
                 </Button>
             </TableCell>
+            <TableCell>
+                <Button
+                    variant="contained"
+                    sx={{
+                        borderRadius: 3,
+                        py: 1,
+                        fontWeight: 700,
+                        backgroundColor: COLORS.red,
+                        textTransform: 'none',
+                    }}
+                    onClick={handleOpenDelete}
+                >
+                    Delete
+                </Button>
+            </TableCell>
+            <Dialog
+                open={openDelete}
+                onClose={handleOpenDelete}
+                sx={{
+                    '& .MuiPaper-root': {
+                        borderRadius: '20px',
+                        margin: '20px',
+                    },
+                }}
+            >
+                <DialogTitle>Are you sure?</DialogTitle>
+
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-around',
+                        marginBottom: '20px',
+                    }}
+                >
+                    <Button
+                        variant="contained"
+                        sx={{
+                            borderRadius: 3,
+                            py: 1,
+                            fontWeight: 700,
+                            backgroundColor: COLORS.red,
+                            textTransform: 'none',
+                        }}
+                        onClick={handleDelete}
+                    >
+                        Yes
+                    </Button>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            borderRadius: 3,
+                            py: 1,
+                            fontWeight: 700,
+                            backgroundColor: COLORS.blue,
+                            textTransform: 'none',
+                        }}
+                        onClick={handleOpenDelete}
+                    >
+                        No
+                    </Button>
+                </Box>
+            </Dialog>
             <Dialog
                 open={open}
                 onClose={handleOpen}
@@ -95,19 +166,8 @@ export const Company: React.FC<ICompanyProps> = ({ company, onUpdate }) => {
                     padding: '20px',
                 }}
             >
-                <DialogTitle>Edit Company</DialogTitle>
+                <DialogTitle>Edit CashBox</DialogTitle>
                 <Box sx={{ padding: '20px 30px' }}>
-                    <CustomTextField
-                        id="bin"
-                        label="Bin"
-                        type="text"
-                        placeholder="bin"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={formState.bin}
-                        onChange={e => handleInputChange(e, 'bin')}
-                    />
                     <CustomTextField
                         id="name"
                         label="Name"
