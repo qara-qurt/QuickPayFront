@@ -20,6 +20,7 @@ export const useAuth = () => {
                 dispatch(login(data))
             } catch (error) {
                 localStorage.removeItem('token')
+                navigate('/sign-in')
             }
             setIsLoading(false)
         }

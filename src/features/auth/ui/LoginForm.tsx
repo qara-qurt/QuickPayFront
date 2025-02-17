@@ -95,7 +95,7 @@ export const LoginForm = () => {
                 >
                     Sign in
                 </Button>
-                <Link
+                {/* <Link
                     to="/sign-up"
                     style={{
                         marginTop: 20,
@@ -104,7 +104,7 @@ export const LoginForm = () => {
                     }}
                 >
                     Don't have an account?
-                </Link>
+                </Link> */}
             </Box>
         </>
     )

@@ -8,6 +8,7 @@ import { ProtectedRoute } from './ProtectedRoute'
 import { AdminPage } from '@/pages/admin'
 import { RootState } from '../store'
 import { useSelector } from 'react-redux'
+import { NotFoundPage } from '@/pages/not_found'
 
 export const mainRoutes = ['/all', '/cash-boxes', '/products', '/employees', '/analytics']
 export const mainRoutesAdmin = [
@@ -60,6 +61,7 @@ export const Router = () => {
             <Route path="/sign-in" element={<SignInPage />} />
             <Route path="/sign-up" element={<SignUpPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="*" element={<NotFoundPage />} />
         </Routes>
     )
 }

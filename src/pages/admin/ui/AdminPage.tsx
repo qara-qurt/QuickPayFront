@@ -16,6 +16,8 @@ import { logout } from '@/features/auth/model/authSlice'
 import { useActiveTab } from '@/pages/main/hooks/useActiveTab'
 import { Companies } from '@/widgets/companies/ui/Companies'
 import { CashBoxesAdmin } from '@/widgets/cash_boxes_admin/ui/CashBoxesAdmin'
+import { UsersAdmin } from '@/widgets/users_admin'
+import { ProductsAdmin } from '@/widgets/products_admin'
 
 const routeToTab: Record<string, number> = {
     '/admin-companies': 0,
@@ -39,12 +41,12 @@ const tabs = [
     {
         name: 'Products',
         icon: product,
-        component: <All />,
+        component: <ProductsAdmin />,
     },
     {
         name: 'Users',
         icon: emloyee,
-        component: <All />,
+        component: <UsersAdmin />,
     },
     {
         name: 'Analytics',

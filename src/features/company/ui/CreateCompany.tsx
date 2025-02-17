@@ -40,8 +40,8 @@ export const CreateCompany: React.FC<ICreateCompanyProps> = ({ onUpdate }) => {
             await companyApi.createCompany({ bin, name })
             setSuccess('Company created')
             onUpdate()
-        } catch (error) {
-            setErrors('Company with this bin or name already exists')
+        } catch (error: any) {
+            setErrors(error?.response?.data?.messages[0] || 'Something went wrong')
         }
     }
 
