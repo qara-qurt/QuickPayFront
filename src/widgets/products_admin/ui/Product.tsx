@@ -5,8 +5,9 @@ import { COLORS } from '@/shared/style/colors'
 import { CustomTextField } from '@/shared/ui'
 import { formatDate } from '@/shared/utils/formatDate'
 import { Alert, Box, Button, Dialog, DialogTitle, TableCell, TableRow } from '@mui/material'
-import { useState } from 'react'
-import { MarkModal } from './MarkModal'
+import { lazy, useState } from 'react'
+
+const MarkModal = lazy(() => import('./MarkModal'))
 
 interface IProductProps {
     product: TProduct
