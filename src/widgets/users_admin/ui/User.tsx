@@ -38,6 +38,7 @@ export const User: React.FC<IUserProps> = ({ user, onUpdate }) => {
         username: user.username,
         email: user.email,
         roles: user.roles[0],
+        organization_id: user.organization_id as unknown as string,
         is_active: user.is_active,
         created_at: user.created_at,
         updated_at: user.updated_at,
@@ -94,6 +95,7 @@ export const User: React.FC<IUserProps> = ({ user, onUpdate }) => {
             <TableCell>{user.email}</TableCell>
             <TableCell>{user.is_active ? 'YES' : 'NO'}</TableCell>
             <TableCell>{user.roles[0]}</TableCell>
+            <TableCell>{user.organization_id}</TableCell>
             <TableCell>{user.created_at ? formatDate(user.created_at) : 'Unknown'}</TableCell>
             <TableCell>{user.created_at ? formatDate(user.updated_at) : 'Unknown'}</TableCell>
             <TableCell>

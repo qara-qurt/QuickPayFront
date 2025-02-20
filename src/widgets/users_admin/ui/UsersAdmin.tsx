@@ -160,6 +160,7 @@ export const UsersAdmin = () => {
                                     { label: 'Email', field: 'email' },
                                     { label: 'Status', field: 'isActive' },
                                     { label: 'Role', field: 'role' },
+                                    { label: 'Organization Id', field: 'organizationId' },
                                     { label: 'Created At', field: 'createdAt' },
                                     { label: 'Updated At', field: 'updatedAt' },
                                 ].map(({ label, field }) => (

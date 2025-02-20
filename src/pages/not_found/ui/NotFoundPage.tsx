@@ -36,7 +36,7 @@ export const NotFoundPage = () => {
                         backgroundColor: COLORS.darkBlue || '#326ACF',
                     },
                 }}
-                onClick={() => navigate('/')}
+                onClick={() => navigate(-1)}
             >
                 Go Home
             </Button>

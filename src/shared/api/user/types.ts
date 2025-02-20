@@ -7,6 +7,7 @@ export interface User {
     password: null
     roles: string[]
     is_active: boolean
+    organization_id: number
     created_at: string
     updated_at: string
 }
@@ -18,6 +19,7 @@ export interface CreateRequest {
     email: string
     password: string
     roles: string[]
+    organization_id: number
 }
 
 export interface UpdateRequest {

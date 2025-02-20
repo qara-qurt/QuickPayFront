@@ -18,6 +18,7 @@ export const CreateUser: React.FC<ICreateUserProps> = ({ onUpdate }) => {
         email: '',
         password: '',
         role: 'USER',
+        organization_id: 1,
     })
 
     const [errors, setErrors] = useState('')
@@ -33,6 +34,7 @@ export const CreateUser: React.FC<ICreateUserProps> = ({ onUpdate }) => {
         const email = formState.email as string
         const password = formState.password as string
         const role = formState.role as string
+        const organization_id = formState.organization_id as number
 
         if (!name || !surname || !username || !email || !password || !role) {
             setErrors('Please fill all fields')
@@ -45,7 +47,15 @@ export const CreateUser: React.FC<ICreateUserProps> = ({ onUpdate }) => {
         }
 
         try {
-            await userApi.createUser({ name, surname, username, email, password, roles: [role] })
+            await userApi.createUser({
+                name,
+                surname,
+                username,
+                email,
+                password,
+                roles: [role],
+                organization_id,
+            })
             setSuccess('User created successfully')
             onUpdate()
         } catch (error: any) {
@@ -122,6 +132,17 @@ export const CreateUser: React.FC<ICreateUserProps> = ({ onUpdate }) => {
                     margin="normal"
                     value={formState.password}
                     onChange={e => handleInputChange(e, 'password')}
+                />
+                <CustomTextField
+                    id="organization_id"
+                    label="Organization ID"
+                    type="number"
+                    placeholder="Organization ID"
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    value={formState.organization_id}
+                    onChange={e => handleInputChange(e, 'organization_id')}
                 />
                 <Select
                     id="role"
