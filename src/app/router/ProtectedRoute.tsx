@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const navigate = useNavigate()
-    const user = useSelector((state: RootState) => state.authReducer?.user)
+    const user = useSelector((state: RootState) => state.auth?.user)
 
     if (user?.roles.includes('ADMIN') && mainRoutes.includes(window.location.pathname)) {
         navigate('/admin-companies')

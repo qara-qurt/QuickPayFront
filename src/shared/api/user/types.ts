@@ -1,3 +1,5 @@
+import { Company } from '../company/types'
+
 export interface User {
     id: number
     name: string
@@ -45,4 +47,9 @@ export interface GetUserResponse {
         totalElements: number
         empty: boolean
     }
+}
+
+export interface GetCompanyUsersResponse {
+    company: Company
+    users: User[]
 }

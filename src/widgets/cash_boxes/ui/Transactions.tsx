@@ -14,6 +14,7 @@ import {
 import { useState } from 'react'
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
+import { CashBox } from '@/shared/api/cashbox/types'
 
 interface ITransactionsProps {
     transactions: {
@@ -23,10 +24,7 @@ interface ITransactionsProps {
         products: { name: string; price: number; count: number }[]
         totalPrice: number
     }[]
-    cashBox: {
-        id: string
-        name: string
-    }
+    cashBox: CashBox
 }
 
 export const Transactions = ({ transactions, cashBox }: ITransactionsProps) => {
@@ -52,7 +50,7 @@ export const Transactions = ({ transactions, cashBox }: ITransactionsProps) => {
     )
 
     const handleNavigateToCashBox = () => {
-        navigate(`/cash-boxes/${cashBox.id}/view`)
+        navigate(`/cash-boxes/${cashBox.cashbox_id}/view`)
     }
 
     return (
@@ -90,7 +88,6 @@ export const Transactions = ({ transactions, cashBox }: ITransactionsProps) => {
                 <Table
                     aria-labelledby="tableTitle"
                     stickyHeader
-                    component="div"
                     sx={{
                         '--TableCell-headBackground': '#f4f6f8',
                         '--Table-headerUnderlineThickness': '1px',
@@ -119,10 +116,16 @@ export const Transactions = ({ transactions, cashBox }: ITransactionsProps) => {
                                 <TableCell>{transaction.date}</TableCell>
                                 <TableCell>{transaction.payment}</TableCell>
                                 <TableCell>
-                                    {transaction.products.map(product => (
-                                        <Typography variant="body2">{product.name}</Typography>
+                                    {transaction.products.map((product, index) => (
+                                        <Typography
+                                            key={`${transaction.transaction_id}-${index}`}
+                                            variant="body2"
+                                        >
+                                            {product.name}
+                                        </Typography>
                                     ))}
                                 </TableCell>
+
                                 <TableCell>{transaction.totalPrice}</TableCell>
                             </TableRow>
                         ))}

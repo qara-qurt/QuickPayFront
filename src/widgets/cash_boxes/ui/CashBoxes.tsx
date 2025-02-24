@@ -3,6 +3,8 @@ import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
 import { useActiveTab } from '@/pages/main/hooks/useActiveTab'
 import add from '@/assets/add.svg'
 import { Transactions } from './Transactions'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/app/store'
 
 const routeToTab: Record<string, number> = {
     '/cash-boxes?id=PN0001265': 0,
@@ -10,15 +12,9 @@ const routeToTab: Record<string, number> = {
     '/cash-boxes?id=PN0002265': 2,
 }
 
-const cashBoxes = [
-    { id: 'PN0001265', name: 'Cash Box - 1' },
-    { id: 'PN0002365', name: 'Cash Box - 2' },
-    { id: 'PN0002265', name: 'Cash Box - 3' },
-]
-
 const transactions = [
     {
-        transaction_id: 'PN0001265',
+        transaction_id: 'PN0101265',
         date: '2021-10-10 13:40',
         payment: 'Kaspi QR',
         products: [
@@ -28,7 +24,7 @@ const transactions = [
         totalPrice: 1400,
     },
     {
-        transaction_id: 'PN0001265',
+        transaction_id: 'PN2001265',
         date: '2021-10-10 13:40',
         payment: 'Kaspi QR',
         products: [
@@ -38,7 +34,7 @@ const transactions = [
         totalPrice: 1400,
     },
     {
-        transaction_id: 'PN0001265',
+        transaction_id: 'PN3001265',
         date: '2021-10-10 13:40',
         payment: 'Kaspi QR',
         products: [
@@ -48,7 +44,7 @@ const transactions = [
         totalPrice: 1400,
     },
     {
-        transaction_id: 'PN0001265',
+        transaction_id: 'PN4001265',
         date: '2021-10-10 13:40',
         payment: 'Kaspi QR',
         products: [
@@ -58,7 +54,7 @@ const transactions = [
         totalPrice: 1400,
     },
     {
-        transaction_id: 'PN0001265',
+        transaction_id: 'PN5001265',
         date: '2021-10-10 13:40',
         payment: 'Kaspi QR',
         products: [
@@ -68,7 +64,7 @@ const transactions = [
         totalPrice: 1400,
     },
     {
-        transaction_id: 'PN0001265',
+        transaction_id: 'PN6001265',
         date: '2021-10-10 13:40',
         payment: 'Kaspi QR',
         products: [
@@ -78,7 +74,7 @@ const transactions = [
         totalPrice: 1400,
     },
     {
-        transaction_id: 'PN0001265',
+        transaction_id: 'PN7001265',
         date: '2021-10-10 13:40',
         payment: 'Kaspi QR',
         products: [
@@ -88,7 +84,7 @@ const transactions = [
         totalPrice: 1400,
     },
     {
-        transaction_id: 'PN0001265',
+        transaction_id: 'PN8001265',
         date: '2021-10-10 13:40',
         payment: 'Kaspi QR',
         products: [
@@ -98,7 +94,7 @@ const transactions = [
         totalPrice: 1400,
     },
     {
-        transaction_id: 'PN0001265',
+        transaction_id: 'PN9001265',
         date: '2021-10-10 13:40',
         payment: 'Kaspi QR',
         products: [
@@ -108,7 +104,7 @@ const transactions = [
         totalPrice: 1400,
     },
     {
-        transaction_id: 'PN0001265',
+        transaction_id: 'PN0011265',
         date: '2021-10-10 13:40',
         payment: 'Kaspi QR',
         products: [
@@ -118,7 +114,7 @@ const transactions = [
         totalPrice: 1400,
     },
     {
-        transaction_id: 'PN0001265',
+        transaction_id: 'PN0021265',
         date: '2021-10-10 13:40',
         payment: 'Kaspi QR',
         products: [
@@ -128,7 +124,7 @@ const transactions = [
         totalPrice: 1400,
     },
     {
-        transaction_id: 'PN0001265',
+        transaction_id: 'PN0031265',
         date: '2021-10-10 13:40',
         payment: 'Kaspi QR',
         products: [
@@ -138,7 +134,7 @@ const transactions = [
         totalPrice: 1400,
     },
     {
-        transaction_id: 'PN0001265',
+        transaction_id: 'PN0041265',
         date: '2021-10-10 13:40',
         payment: 'Kaspi QR',
         products: [
@@ -149,7 +145,7 @@ const transactions = [
     },
 
     {
-        transaction_id: 'PN0001265',
+        transaction_id: 'PN0006265',
         date: '2021-10-10 13:40',
         payment: 'Kaspi QR',
         products: [
@@ -162,6 +158,7 @@ const transactions = [
 
 export const CashBoxes = () => {
     const { activeTab, handleTabChange } = useActiveTab(routeToTab)
+    const cashBoxes = useSelector((state: RootState) => state.cashBoxes.data)
 
     return (
         <Box>
@@ -207,13 +204,13 @@ export const CashBoxes = () => {
                             '& .MuiTab-root': { justifyContent: 'flex-start', textAlign: 'left' },
                         }}
                     >
-                        {cashBoxes.map((cashBox, index) => (
+                        {cashBoxes.map(cashBox => (
                             <Tab
-                                key={index}
+                                key={cashBox.cashbox_id}
                                 label={
                                     <Box>
                                         <Typography variant="inherit" sx={{ color: COLORS.gray }}>
-                                            {cashBox.id}
+                                            {cashBox.cashbox_id}
                                         </Typography>
                                         <Typography
                                             variant="inherit"
@@ -234,7 +231,6 @@ export const CashBoxes = () => {
                             <Transactions transactions={transactions} cashBox={cashBox} />
                         </CustomTabPanel>
                     ))}
-                    {/* Repeat CustomTabPanel for other tabs if necessary */}
                 </Box>
             </Box>
         </Box>

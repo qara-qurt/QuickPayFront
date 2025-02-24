@@ -13,8 +13,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { All } from '@/widgets/all'
 import { CashBoxes } from '@/widgets/cash_boxes'
 import { useActiveTab } from '../hooks/useActiveTab'
-import { useDispatch } from 'react-redux'
-import { logout } from '@/features/auth/model/authSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '@/features/auth/store/authSlice'
+import { useEffect } from 'react'
+import { fetchEmployees } from '@/features/user/store/userSlice'
+import { RootState, AppDispatch } from '@/app/store'
+import { fetchCashBoxes } from '@/features/cashbox/store/cashboxSlice'
+import { fetchProducts } from '@/features/product/store/productSlice'
 
 const routeToTab: Record<string, number> = {
     '/all': 0,
@@ -53,10 +58,11 @@ const tabs = [
 ]
 
 export const MainPage = () => {
+    const user = useSelector((state: RootState) => state.auth.user)
     const { activeTab, handleTabChange } = useActiveTab(routeToTab)
     const navigate = useNavigate()
 
-    const dispatch = useDispatch()
+    const dispatch: AppDispatch = useDispatch()
 
     const handleLogout = () => {
         dispatch(logout())
@@ -65,6 +71,13 @@ export const MainPage = () => {
         }, 0)
     }
 
+    useEffect(() => {
+        if (user?.organization_id !== undefined) {
+            dispatch(fetchEmployees(user.organization_id))
+            dispatch(fetchProducts(user.organization_id))
+            dispatch(fetchCashBoxes(user.organization_id))
+        }
+    }, [dispatch])
     return (
         <Box
             sx={{

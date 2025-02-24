@@ -14,19 +14,23 @@ export const cashBoxApi = {
         await apiClient.delete(`/cash-boxes/${id}`)
     },
     getCashboxes: async (
-        page: number,
-        limit: number,
-        field: string,
-        order: string,
-        name: string,
+        page?: number,
+        limit?: number,
+        field?: string,
+        order?: string,
+        name?: string,
+        organization_id?: number,
     ): Promise<GetCashBoxResponse> => {
-        const response = await apiClient.get(
-            `/cash-boxes?page=${page}&limit=${limit}&sort=${field}&order=${order}&name=${name}`,
-        )
-        return response.data
-    },
-    getCashboxesByCompany: async (company_id: number): Promise<CashBox[]> => {
-        const response = await apiClient.get(`/cash-boxes/organization/${company_id}`)
+        const response = await apiClient.get(`/cash-boxes`, {
+            params: {
+                page,
+                limit,
+                sort: field,
+                order,
+                name,
+                organization_id,
+            },
+        })
         return response.data
     },
     getCashBox: async (cashbox_id: number): Promise<CashBox> => {

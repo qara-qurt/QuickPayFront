@@ -20,7 +20,7 @@ export const mainRoutesAdmin = [
 ]
 
 export const Router = () => {
-    const user = useSelector((state: RootState) => state.authReducer?.user)
+    const user = useSelector((state: RootState) => state.auth?.user)
 
     return (
         <Routes>

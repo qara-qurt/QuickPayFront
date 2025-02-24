@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { loginUser, registerUser } from '../model/authSlice'
+import { loginUser, registerUser } from '../store/authSlice'
 import { AppDispatch } from '@/app/store'
 import { useState } from 'react'
 

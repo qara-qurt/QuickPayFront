@@ -3,19 +3,11 @@ import { COLORS } from '@/shared/style/colors'
 import { Box, Typography } from '@mui/material'
 import calendar from '@/assets/products-menu.svg'
 import priority from '@/assets/priority.svg'
+import { CashBox } from '@/shared/api/cashbox/types'
+import { formatDate } from '@/shared/utils/formatDate'
 
 interface ICashBoxCardProps {
-    cachBox: {
-        id: string
-        name: string
-        information: {
-            todayCash: number
-            createdAt: string
-            totalCash: number
-            transactionalToday: number
-            transactionalTotal: number
-        }
-    }
+    cachBox: CashBox
 }
 
 export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
@@ -30,7 +22,7 @@ export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
         >
             <Box
                 sx={{
-                    flex: 1,
+                    flex: 2,
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
@@ -54,7 +46,7 @@ export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
                                 color: COLORS.gray,
                             }}
                         >
-                            {cachBox.id}
+                            {cachBox.cashbox_id}
                         </Typography>
                         <Typography variant="h6">{cachBox.name}</Typography>
                     </Box>
@@ -66,19 +58,19 @@ export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
                     }}
                 >
                     <Box sx={{ display: 'flex' }}>
-                        <img src={calendar} alt="" />
+                        <img src={calendar} alt="" width={'22px'} />
                         <Typography
                             variant="inherit"
                             sx={{
                                 color: COLORS.gray,
-                                marginX: '5px',
+                                margin: '10px 5px',
                             }}
                         >
-                            {cachBox.information.createdAt}
+                            {formatDate(cachBox.created_at)}
                         </Typography>
                     </Box>
-                    <Box sx={{ display: 'flex' }}>
-                        <img src={priority} alt="" />
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <img src={priority} alt="" width={'18px'} />
                         <Typography
                             variant="inherit"
                             sx={{
@@ -114,7 +106,7 @@ export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
                                 fontWeight: 600,
                             }}
                         >
-                            {cachBox.information.todayCash}kz
+                            {/* {cachBox.information.todayCash}kz */}
                         </Typography>
                     </Box>
                     <Box>
@@ -132,7 +124,7 @@ export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
                                 fontWeight: 600,
                             }}
                         >
-                            {cachBox.information.totalCash}kz
+                            {/* {cachBox.information.totalCash}kz */}
                         </Typography>
                     </Box>
                     <Box>
@@ -150,7 +142,7 @@ export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
                                 fontWeight: 600,
                             }}
                         >
-                            {cachBox.information.transactionalToday}
+                            {/* {cachBox.information.transactionalToday} */}
                         </Typography>
                     </Box>
                     <Box>
@@ -168,7 +160,7 @@ export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
                                 fontWeight: 600,
                             }}
                         >
-                            {cachBox.information.transactionalTotal}
+                            {/* {cachBox.information.transactionalTotal} */}
                         </Typography>
                     </Box>
                 </Box>

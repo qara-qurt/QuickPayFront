@@ -1,12 +1,9 @@
+import { Product } from '@/shared/api/product/types'
 import { COLORS } from '@/shared/style/colors'
 import { Box, Typography } from '@mui/material'
 
 interface IProductCardProps {
-    product: {
-        name: string
-        price: number
-        totalCount: number
-    }
+    product: Product
 }
 
 export const ProductCard = ({ product }: IProductCardProps) => {
@@ -36,7 +33,7 @@ export const ProductCard = ({ product }: IProductCardProps) => {
                 Price: <span style={{ fontWeight: 600 }}>{product.price} KZT</span>
             </Typography>
             <Typography variant="body2" sx={{ fontSize: '14px' }}>
-                Total Count: {product.totalCount}
+                Total Count:
             </Typography>
         </Box>
     )

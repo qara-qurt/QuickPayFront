@@ -1,5 +1,5 @@
 import { apiClient } from '../axiosInstance'
-import { CreateAndUpdateRequest, CreateResponse, GetUProdutResponse, Product } from './types'
+import { CreateAndUpdateRequest, CreateResponse, GetProdutResponse, Product } from './types'
 
 export const productApi = {
     createProduct: async (data: CreateAndUpdateRequest): Promise<CreateResponse> => {
@@ -11,12 +11,13 @@ export const productApi = {
         return response.data
     },
     getProducts: async (
-        page: number,
-        limit: number,
-        field: string,
-        order: string,
+        page?: number,
+        limit?: number,
+        field?: string,
+        order?: string,
         search?: string,
-    ): Promise<GetUProdutResponse> => {
+        organization_id?: number,
+    ): Promise<GetProdutResponse> => {
         const response = await apiClient.get('/products', {
             params: {
                 page,
@@ -24,6 +25,7 @@ export const productApi = {
                 sort: field,
                 order,
                 search,
+                organization_id,
             },
         })
         return response.data

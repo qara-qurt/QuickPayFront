@@ -80,8 +80,9 @@ export const MarkModal: React.FC<IMarkModalProps> = ({ open, handleOpen, product
             connectHeaders: { Authorization: `Bearer ${token}` },
             onConnect: () => {
                 console.log('✅ Connected to WebSocket')
-                client.subscribe('/topic/register-mark', message => {
+                client.subscribe('/topic/register-mark/PN00000001', message => {
                     const data = JSON.parse(message.body)
+                    console.log(message)
                     if (data.rfid_tag) addUniqueMark(data.rfid_tag)
                 })
             },

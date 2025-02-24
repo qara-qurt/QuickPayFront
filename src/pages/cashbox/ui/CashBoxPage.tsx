@@ -4,92 +4,60 @@ import { useNavigate, useParams } from 'react-router-dom'
 import blue_logo from '@/assets/blue_logo.svg'
 import banner from '@/assets/banner.png'
 import arrow from '@/assets/arrow_back.svg'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Client } from '@stomp/stompjs'
 import SockJS from 'sockjs-client'
-
-const cashBox = {
-    id: 'PN0001345',
-    name: 'Cash Box - 1',
-}
-
-const clothes = [
-    {
-        name: 'Product 1',
-        price: 100,
-        count: 2,
-    },
-    {
-        name: 'Product 2',
-        price: 200,
-        count: 3,
-    },
-    {
-        name: 'Product 3',
-        price: 300,
-        count: 4,
-    },
-    {
-        name: 'Product 4',
-        price: 400,
-        count: 5,
-    },
-]
+import { useSelector } from 'react-redux'
+import { RootState } from '@/app/store'
+import { Product } from '@/shared/api/product/types'
+import { ProductCard } from '@/shared/ui/cards/ProductCard'
 
 const token = localStorage.getItem('token') || ''
 
 export const CashBoxPage = () => {
+    const [data, setData] = useState<Product[]>([])
     const { id } = useParams<{ id: string }>()
+    const cashbox = useSelector((state: RootState) => state.cashBoxes.data).find(
+        cashbox => cashbox.cashbox_id === id,
+    )
     const navigate = useNavigate()
+    const stompClientRef = useRef<Client | null>(null)
 
     const handleGoBack = () => {
         navigate(-1)
     }
 
     useEffect(() => {
+        if (!id) return
+
         const client = new Client({
             webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
-            connectHeaders: {
-                Authorization: `Bearer ${token}`,
-            },
+            connectHeaders: { Authorization: `Bearer ${token}` },
             onConnect: () => {
-                console.log('Connected to WebSocket server')
-                client.subscribe('/topic/cash-boxes', message => {
-                    console.log('Received message:', message.body)
+                console.log(`✅ Connected to WebSocket for cashbox: /topic/cash-box/${id}`)
+
+                client.subscribe(`/topic/cash-box/${id}`, message => {
+                    const res: Product = JSON.parse(message.body)
+                    setData(prev => {
+                        if (!prev.some(item => item.id === res.id)) {
+                            return [...prev, res]
+                        }
+                        return prev
+                    })
                 })
             },
-            onStompError: error => {
-                console.error('STOMP Error:', error)
-            },
+            onStompError: error => console.error('❌ STOMP Error:', error),
         })
 
         client.activate()
-
-        setTimeout(() => {
-            if (client.connected) {
-                client.publish({
-                    destination: '/app/test',
-                    body: JSON.stringify({ message: 'Hello, this is a test message!' }),
-                })
-                client.publish({
-                    destination: '/app/test',
-                    body: JSON.stringify({ message: 'Hello, this is a test message!' }),
-                })
-                client.publish({
-                    destination: '/app/test',
-                    body: JSON.stringify({ message: 'Hello, this is a test message!' }),
-                })
-                client.publish({
-                    destination: '/app/test',
-                    body: JSON.stringify({ message: 'Hello, this is a test message!' }),
-                })
-            }
-        }, 2000)
+        stompClientRef.current = client
 
         return () => {
-            client.deactivate()
+            if (stompClientRef.current) {
+                stompClientRef.current.deactivate()
+            }
         }
-    }, [])
+    }, [id])
 
     return (
         <Box
@@ -151,7 +119,7 @@ export const CashBoxPage = () => {
                             marginTop: '10px',
                         }}
                     >
-                        {cashBox.name}
+                        {cashbox?.name}
                     </Typography>
                 </Box>
                 <Box
@@ -163,9 +131,14 @@ export const CashBoxPage = () => {
                         marginTop: '-150px',
                     }}
                 >
-                    {clothes.length > 0 ? (
+                    {data.length > 0 ? (
                         <Box>
                             <Typography variant="h6">Clothes</Typography>
+                            <Box>
+                                {data.map((product, index) => (
+                                    <ProductCard key={index} product={product} />
+                                ))}
+                            </Box>
                         </Box>
                     ) : (
                         <Box>

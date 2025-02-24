@@ -40,6 +40,7 @@ export const loginUser = createAsyncThunk<User, LoginRequest, { rejectValue: str
                 surname: loginResponse.user.surname,
                 email: loginResponse.user.email,
                 roles: loginResponse.user.roles,
+                organization_id: loginResponse.user.organization_id,
                 is_active: loginResponse.user.is_active,
                 created_at: loginResponse.user.created_at,
                 updated_at: loginResponse.user.updated_at,

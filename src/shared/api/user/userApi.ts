@@ -1,5 +1,12 @@
 import { apiClient } from '../axiosInstance'
-import { CreateRequest, CreateResponse, GetUserResponse, UpdateRequest, User } from './types'
+import {
+    CreateRequest,
+    CreateResponse,
+    GetCompanyUsersResponse,
+    GetUserResponse,
+    UpdateRequest,
+    User,
+} from './types'
 
 export const userApi = {
     createUser: async (data: CreateRequest): Promise<CreateResponse> => {
@@ -29,6 +36,10 @@ export const userApi = {
                 search,
             },
         })
+        return response.data
+    },
+    getCompanyUsers: async (companyId: number): Promise<GetCompanyUsersResponse> => {
+        const response = await apiClient.get(`/organization-users/${companyId}`)
         return response.data
     },
 }

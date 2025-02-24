@@ -1,3 +1,5 @@
+import exp from 'constants'
+
 export interface Product {
     id: number
     name: string
@@ -25,7 +27,7 @@ export interface CreateResponse {
     id: string
 }
 
-export interface GetUProdutResponse {
+export interface GetProdutResponse {
     data: {
         content: Product[]
         pageble: {

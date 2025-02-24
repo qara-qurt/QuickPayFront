@@ -47,7 +47,7 @@ export const CreateProduct: React.FC<ICreateProductProps> = ({ onUpdate }) => {
         }
 
         try {
-            const res = await productApi.createProduct({
+            await productApi.createProduct({
                 name,
                 price,
                 sizes,

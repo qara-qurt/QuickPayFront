@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authApi } from '../api'
 import { useDispatch } from 'react-redux'
-import { login } from '@/features/auth/model/authSlice'
+import { login } from '@/features/auth/store/authSlice'
 
 export const useAuth = () => {
     const [isLoading, setIsLoading] = useState(true)

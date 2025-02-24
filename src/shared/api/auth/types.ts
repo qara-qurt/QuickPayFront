@@ -5,6 +5,7 @@ export interface User {
     surname: string
     email: string
     roles: string[]
+    organization_id: number
     is_active: boolean
     created_at: string
     updated_at: string
