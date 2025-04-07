@@ -6,11 +6,17 @@ import { Alert, Box, Button, MenuItem, Select, SelectChangeEvent, Typography } f
 import { useState } from 'react'
 
 interface ICreateUserProps {
+    organization_id?: number
+    creater_role?: string
     handleOpen(): void
     onUpdate(): void
 }
 
-export const CreateUser: React.FC<ICreateUserProps> = ({ onUpdate }) => {
+export const CreateUser: React.FC<ICreateUserProps> = ({
+    onUpdate,
+    organization_id,
+    creater_role,
+}) => {
     const { formState, handleInputChange } = useForm({
         name: '',
         surname: '',
@@ -18,7 +24,7 @@ export const CreateUser: React.FC<ICreateUserProps> = ({ onUpdate }) => {
         email: '',
         password: '',
         role: 'USER',
-        organization_id: 1,
+        organization_id: organization_id ?? 1,
     })
 
     const [errors, setErrors] = useState('')
@@ -143,7 +149,9 @@ export const CreateUser: React.FC<ICreateUserProps> = ({ onUpdate }) => {
                     margin="normal"
                     value={formState.organization_id}
                     onChange={e => handleInputChange(e, 'organization_id')}
+                    disabled={!!organization_id}
                 />
+
                 <Select
                     id="role"
                     value={formState.role}
@@ -152,11 +160,34 @@ export const CreateUser: React.FC<ICreateUserProps> = ({ onUpdate }) => {
                     variant="outlined"
                     sx={{ marginTop: 2 }}
                 >
-                    <MenuItem value="USER">User</MenuItem>
-                    <MenuItem value="ADMIN">Admin</MenuItem>
-                    <MenuItem value="ORGANIZATION_ADMIN">ORGANIZATION_ADMIN</MenuItem>
-                    <MenuItem value="MANAGER">MANAGER</MenuItem>
+                    {creater_role === 'ADMIN'
+                        ? [
+                              <MenuItem key="user" value="USER">
+                                  User
+                              </MenuItem>,
+                              <MenuItem key="admin" value="ADMIN">
+                                  Admin
+                              </MenuItem>,
+                              <MenuItem key="org_admin" value="ORGANIZATION_ADMIN">
+                                  ORGANIZATION_ADMIN
+                              </MenuItem>,
+                              <MenuItem key="manager" value="MANAGER">
+                                  MANAGER
+                              </MenuItem>,
+                          ]
+                        : [
+                              <MenuItem key="user" value="USER">
+                                  User
+                              </MenuItem>,
+                              <MenuItem key="org_admin" value="ORGANIZATION_ADMIN">
+                                  ORGANIZATION_ADMIN
+                              </MenuItem>,
+                              <MenuItem key="manager" value="MANAGER">
+                                  MANAGER
+                              </MenuItem>,
+                          ]}
                 </Select>
+
                 {errors && (
                     <Alert severity="error" sx={{ marginTop: 2 }}>
                         {errors}

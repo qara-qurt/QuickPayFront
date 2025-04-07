@@ -1,7 +1,6 @@
 import { COLORS } from '@/shared/style/colors'
-import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
+import { Box, Tab, Tabs, Typography } from '@mui/material'
 import { useActiveTab } from '@/pages/main/hooks/useActiveTab'
-import add from '@/assets/add.svg'
 import { Transactions } from './Transactions'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/app/store'
@@ -171,20 +170,6 @@ export const CashBoxes = () => {
                 }}
             >
                 <Typography variant="h5">Cash Boxes</Typography>
-                <Button
-                    variant="contained"
-                    sx={{
-                        borderRadius: 3,
-                        px: 4,
-                        py: 1,
-                        fontWeight: 700,
-                        backgroundColor: COLORS.blue,
-                        textTransform: 'none',
-                    }}
-                >
-                    <img src={add} alt="" style={{ marginLeft: '-10px', marginRight: '10px' }} />
-                    CashBox
-                </Button>
             </Box>
             <Box sx={{ display: 'flex' }}>
                 <Box
@@ -246,7 +231,7 @@ interface TabPanelProps {
 function CustomTabPanel({ children, value, index, ...other }: TabPanelProps) {
     return (
         <div hidden={value !== index} {...other}>
-            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+            {value === index && <Box sx={{ p: 3, paddingTop: 0 }}>{children}</Box>}
         </div>
     )
 }

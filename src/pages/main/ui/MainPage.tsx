@@ -20,6 +20,8 @@ import { fetchEmployees } from '@/features/user/store/userSlice'
 import { RootState, AppDispatch } from '@/app/store'
 import { fetchCashBoxes } from '@/features/cashbox/store/cashboxSlice'
 import { fetchProducts } from '@/features/product/store/productSlice'
+import { Employees } from '@/widgets/employees'
+import { Products } from '@/widgets/products/ui/Products'
 
 const routeToTab: Record<string, number> = {
     '/all': 0,
@@ -43,12 +45,12 @@ const tabs = [
     {
         name: 'Products',
         icon: product,
-        component: <All />,
+        component: <Products />,
     },
     {
         name: 'Employees',
         icon: emloyee,
-        component: <All />,
+        component: <Employees />,
     },
     {
         name: 'Analytics',

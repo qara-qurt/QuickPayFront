@@ -14,7 +14,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import add from '@/assets/add.svg'
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
 import { Product } from './Product'
@@ -22,7 +22,11 @@ import { Product as TProduct } from '@/shared/api/product/types'
 import { CreateProduct } from '@/features/product'
 import { productApi } from '@/shared/api/product/productApi'
 
-export const ProductsAdmin = () => {
+interface IProductsAdminProps {
+    organization_id?: number
+}
+
+export const ProductsAdmin: React.FC<IProductsAdminProps> = ({ organization_id }) => {
     const [open, setOpen] = useState(false)
     const [product, setProducts] = useState<TProduct[]>([])
     const [currentPage, setCurrentPage] = useState(0)
@@ -50,6 +54,7 @@ export const ProductsAdmin = () => {
                 field,
                 order,
                 search,
+                organization_id,
             )
             setProducts(data.content)
             setTotalPages(data.totalPages)

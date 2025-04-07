@@ -2,7 +2,6 @@ import { COLORS } from '@/shared/style/colors'
 import { Box, Typography } from '@mui/material'
 import { useNavigate, useParams } from 'react-router-dom'
 import blue_logo from '@/assets/blue_logo.svg'
-import banner from '@/assets/banner.png'
 import arrow from '@/assets/arrow_back.svg'
 import { useEffect, useRef, useState } from 'react'
 import { Client } from '@stomp/stompjs'
@@ -10,11 +9,15 @@ import SockJS from 'sockjs-client'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/app/store'
 import { Product } from '@/shared/api/product/types'
-import { ProductCard } from '@/shared/ui/cards/ProductCard'
+import { CartView } from './CartView.tsx'
+import { PaymentMethodView } from './PaymentMethodView.tsx'
+import { QrCodeView } from './QrCodeView.tsx'
 
 const token = localStorage.getItem('token') || ''
 
 export const CashBoxPage = () => {
+    const [step, setStep] = useState<'cart' | 'payment' | 'qr'>('payment')
+    const [selectedMethod, setSelectedMethod] = useState<string | null>(null)
     const [data, setData] = useState<Product[]>([])
     const { id } = useParams<{ id: string }>()
     const cashbox = useSelector((state: RootState) => state.cashBoxes.data).find(
@@ -24,7 +27,24 @@ export const CashBoxPage = () => {
     const stompClientRef = useRef<Client | null>(null)
 
     const handleGoBack = () => {
-        navigate(-1)
+        if (step === 'payment') {
+            setStep('cart')
+        } else if (step === 'qr') {
+            setStep('payment')
+            setSelectedMethod(null)
+        } else {
+            navigate(-1)
+        }
+    }
+
+    const handlePay = () => {
+        setStep('payment')
+    }
+
+    const handlePaymentSelect = (method: string) => {
+        console.log('Selected payment method:', method)
+        setSelectedMethod(method)
+        setStep('qr')
     }
 
     useEffect(() => {
@@ -85,40 +105,20 @@ export const CashBoxPage = () => {
                     sx={{ display: 'flex', gap: '5px', marginBottom: '20px', cursor: 'pointer' }}
                     onClick={handleGoBack}
                 >
-                    <img src={arrow} alt="" />
+                    <img src={arrow} alt="back" />
                     <Typography variant="inherit" sx={{ color: COLORS.gray }}>
                         Back
                     </Typography>
                 </Box>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'flex-end',
-                        gap: '15px',
-                    }}
-                >
-                    <img src={blue_logo} alt="" />
+                <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: '15px' }}>
+                    <img src={blue_logo} alt="logo" />
                     <Typography variant="h4">Quick Pay</Typography>
                 </Box>
-                <Box
-                    sx={{
-                        marginTop: '50px',
-                    }}
-                >
-                    <Typography
-                        variant="inherit"
-                        sx={{
-                            color: COLORS.gray,
-                        }}
-                    >
+                <Box sx={{ marginTop: '50px' }}>
+                    <Typography variant="inherit" sx={{ color: COLORS.gray }}>
                         {id}
                     </Typography>
-                    <Typography
-                        variant="h5"
-                        sx={{
-                            marginTop: '10px',
-                        }}
-                    >
+                    <Typography variant="h5" sx={{ marginTop: '10px' }}>
                         {cashbox?.name}
                     </Typography>
                 </Box>
@@ -131,25 +131,20 @@ export const CashBoxPage = () => {
                         marginTop: '-150px',
                     }}
                 >
-                    {data.length > 0 ? (
-                        <Box>
-                            <Typography variant="h6">Clothes</Typography>
-                            <Box>
-                                {data.map((product, index) => (
-                                    <ProductCard key={index} product={product} />
-                                ))}
-                            </Box>
-                        </Box>
+                    {step === 'qr' ? (
+                        <QrCodeView
+                            amount={data.reduce((total, p) => total + p.price, 0)}
+                            method={selectedMethod ?? ''}
+                            onBack={handleGoBack}
+                        />
+                    ) : step === 'cart' ? (
+                        <CartView data={data} onPay={handlePay} />
                     ) : (
-                        <Box>
-                            <img src={banner} />
-                            <Typography
-                                variant="h4"
-                                sx={{ textAlign: 'center', marginTop: '50px' }}
-                            >
-                                Put clothes in a bucket
-                            </Typography>
-                        </Box>
+                        <PaymentMethodView
+                            onSelect={handlePaymentSelect}
+                            total={data.reduce((total, p) => total + p.price, 0)}
+                            onBack={handleGoBack}
+                        />
                     )}
                 </Box>
             </Box>

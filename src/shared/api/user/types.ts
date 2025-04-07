@@ -50,6 +50,7 @@ export interface GetUserResponse {
 }
 
 export interface GetCompanyUsersResponse {
+    organization: any
     company: Company
     users: User[]
 }

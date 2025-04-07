@@ -5,6 +5,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 interface UsersState {
     data: User[]
+    organization: any
     status: 'idle' | 'loading' | 'succeeded' | 'failed'
     error: string | null
 }
@@ -12,6 +13,7 @@ interface UsersState {
 // Начальное состояние
 const initialState: UsersState = {
     data: [],
+    organization: null,
     status: 'idle',
     error: null,
 }
@@ -22,7 +24,7 @@ export const fetchEmployees = createAsyncThunk(
     async (organization_id: number, { rejectWithValue }) => {
         try {
             const response = await userApi.getCompanyUsers(organization_id)
-            return response.users
+            return response
         } catch (error: any) {
             return rejectWithValue(error.message)
         }
@@ -43,7 +45,8 @@ const usersSlice = createSlice({
             })
             .addCase(fetchEmployees.fulfilled, (state, action) => {
                 state.status = 'succeeded'
-                state.data = action.payload
+                state.data = action.payload.users
+                state.organization = action.payload.organization
             })
             .addCase(fetchEmployees.rejected, (state, action) => {
                 state.status = 'failed'

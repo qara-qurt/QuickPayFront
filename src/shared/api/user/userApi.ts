@@ -26,6 +26,7 @@ export const userApi = {
         field: string,
         order: string,
         search?: string,
+        organization_id?: number,
     ): Promise<GetUserResponse> => {
         const response = await apiClient.get('/users', {
             params: {
@@ -34,6 +35,7 @@ export const userApi = {
                 sort: field,
                 order,
                 search,
+                organization_id,
             },
         })
         return response.data
