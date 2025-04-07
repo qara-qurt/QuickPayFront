@@ -16,7 +16,7 @@ import { QrCodeView } from './QrCodeView.tsx'
 const token = localStorage.getItem('token') || ''
 
 export const CashBoxPage = () => {
-    const [step, setStep] = useState<'cart' | 'payment' | 'qr'>('payment')
+    const [step, setStep] = useState<'cart' | 'payment' | 'qr'>('cart')
     const [selectedMethod, setSelectedMethod] = useState<string | null>(null)
     const [data, setData] = useState<Product[]>([])
     const { id } = useParams<{ id: string }>()
@@ -133,6 +133,8 @@ export const CashBoxPage = () => {
                 >
                     {step === 'qr' ? (
                         <QrCodeView
+                            organizationId={cashbox?.organization_id ?? 0}
+                            cashboxId={id ?? ''}
                             amount={data.reduce((total, p) => total + p.price, 0)}
                             method={selectedMethod ?? ''}
                             onBack={handleGoBack}

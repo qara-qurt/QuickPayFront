@@ -3,7 +3,7 @@ export interface CashBox {
     name: string
     cashbox_id: string
     is_active: boolean
-    organization_id: boolean
+    organization_id: number
     created_at: string
     updated_at: string
 }

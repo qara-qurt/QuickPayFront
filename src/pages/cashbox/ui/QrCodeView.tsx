@@ -1,18 +1,53 @@
-import { Box, Typography, Button } from '@mui/material'
+import { Box, Typography, Button, Snackbar, Alert } from '@mui/material'
 import { COLORS } from '@/shared/style/colors'
 import qr_image from '@/assets/qr.svg'
+import { paymentApi } from '@/shared/api/payment/payjmentApi'
+import { useState } from 'react'
 
 interface QrCodeViewProps {
+    organizationId: number
+    cashboxId: string
     amount: number
     method: string
     onBack: () => void
     onConfirm?: () => void
 }
 
-export const QrCodeView = ({ amount, method, onBack, onConfirm }: QrCodeViewProps) => {
+export const QrCodeView = ({
+    organizationId,
+    cashboxId,
+    amount,
+    method,
+    onBack,
+    onConfirm,
+}: QrCodeViewProps) => {
+    const [open, setOpen] = useState(false)
+    const [loading, setLoading] = useState(false)
+
     const handlePay = () => {
-        // Handle payment logic here
-        console.log('Payment initiated')
+        if (loading) return
+        setLoading(true)
+
+        paymentApi
+            .createPayment({
+                cashboxId,
+                organizationId,
+                productIds: [1, 1],
+                totalAmount: amount,
+                paymentMethod: method,
+            })
+            .then(res => {
+                console.log('Payment successful:', res)
+                setOpen(true)
+                setTimeout(() => {
+                    setOpen(false)
+                    onBack()
+                }, 2000)
+            })
+            .catch(err => {
+                console.error('Payment error:', err)
+            })
+            .finally(() => setLoading(false))
     }
 
     return (
@@ -23,7 +58,7 @@ export const QrCodeView = ({ amount, method, onBack, onConfirm }: QrCodeViewProp
             <img
                 src={qr_image}
                 alt="QR Code"
-                style={{ width: '300px', height: '300px' }}
+                style={{ width: '300px', height: '300px', cursor: 'pointer' }}
                 onClick={handlePay}
             />
             <Typography variant="h6" sx={{ marginTop: '20px' }}>
@@ -41,6 +76,7 @@ export const QrCodeView = ({ amount, method, onBack, onConfirm }: QrCodeViewProp
                         fontWeight: 700,
                     }}
                     onClick={onBack}
+                    disabled={loading}
                 >
                     Back
                 </Button>
@@ -55,11 +91,18 @@ export const QrCodeView = ({ amount, method, onBack, onConfirm }: QrCodeViewProp
                             fontWeight: 700,
                         }}
                         onClick={onConfirm}
+                        disabled={loading}
                     >
                         Confirm
                     </Button>
                 )}
             </Box>
+
+            <Snackbar open={open} autoHideDuration={2000}>
+                <Alert severity="success" sx={{ width: '100%' }}>
+                    Payment successful!
+                </Alert>
+            </Snackbar>
         </Box>
     )
 }
