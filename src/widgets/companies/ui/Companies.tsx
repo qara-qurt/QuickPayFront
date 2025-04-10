@@ -158,7 +158,7 @@ export const Companies = () => {
                     <TableHead>
                         <TableRow sx={{ backgroundColor: COLORS.lightBlue, fontWeight: 700 }}>
                             {[
-                                { label: 'Company ID', field: 'id' },
+                                { label: 'ID', field: 'id' },
                                 { label: 'Name', field: 'name' },
                                 { label: 'BIN', field: 'bin' },
                                 { label: 'Is Active', field: 'isActive' },

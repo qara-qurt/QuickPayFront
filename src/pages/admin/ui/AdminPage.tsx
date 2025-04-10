@@ -58,7 +58,10 @@ const tabs = [
 export const AdminPage = () => {
     const { activeTab, handleTabChange } = useActiveTab(routeToTab)
     const navigate = useNavigate()
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
     const dispatch = useDispatch()
 
     const handleLogout = () => {
@@ -73,6 +76,7 @@ export const AdminPage = () => {
             sx={{
                 fontFamily: 'Nunito Sans, Arial, sans-serif',
                 display: 'flex',
+<<<<<<< HEAD
                 backgroundColor: COLORS.lightBlue,
                 width: '100%',
             }}
@@ -84,10 +88,26 @@ export const AdminPage = () => {
                     backgroundColor: COLORS.white,
                     margin: '15px',
                     borderRadius: '24px',
+=======
+                flexDirection: { xs: 'column', md: 'row' },
+                backgroundColor: COLORS.lightBlue,
+                width: '100%',
+                minHeight: '100vh',
+            }}
+        >
+            {/* Sidebar */}
+            <Box
+                sx={{
+                    backgroundColor: COLORS.white,
+                    borderRadius: { md: '24px', xs: 0 },
+                    padding: '20px',
+                    margin: { xs: 0, md: '15px' },
+>>>>>>> master
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'space-between',
+<<<<<<< HEAD
                     padding: '20px',
                     height: '96vh',
                 }}
@@ -108,10 +128,55 @@ export const AdminPage = () => {
                         value={activeTab}
                         onChange={(_, newValue) => handleTabChange(newValue)}
                         orientation="vertical"
+=======
+                    height: { xs: 'auto', md: '96vh' },
+                    width: { xs: '100%', md: '260px' },
+                    position: { md: 'fixed', xs: 'relative' },
+                    zIndex: 10,
+                    boxShadow: { xs: '0px 2px 6px rgba(0, 0, 0, 0.05)', md: 'none' },
+                }}
+            >
+                {/* Верхняя часть - лого и табы */}
+                <Box sx={{ width: '100%', overflowY: 'auto', flexGrow: 1 }}>
+                    {/* Логотип */}
+                    <Box
+                        sx={{
+                            marginBottom: '32px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                        }}
+                    >
+                        <img
+                            src={blue_log}
+                            alt="logo"
+                            style={{ maxHeight: '36px', width: 'auto' }}
+                        />
+                        <Typography variant="h6" fontSize="18px">
+                            Admin panel
+                        </Typography>
+                    </Box>
+
+                    {/* Навигация по табам */}
+                    <Tabs
+                        value={activeTab}
+                        onChange={(_, newValue) => handleTabChange(newValue)}
+                        orientation={window.innerWidth < 960 ? 'horizontal' : 'vertical'}
+                        variant="scrollable"
+                        scrollButtons={false}
+                        allowScrollButtonsMobile
+>>>>>>> master
                         sx={{
                             '& .MuiTab-root': {
                                 justifyContent: 'flex-start',
                                 textAlign: 'left',
+<<<<<<< HEAD
+=======
+                                minHeight: '48px',
+                                padding: '8px 12px',
+                                gap: '10px',
+                                fontSize: '14px',
+>>>>>>> master
                             },
                         }}
                     >
@@ -119,45 +184,107 @@ export const AdminPage = () => {
                             <Tab
                                 key={index}
                                 label={tab.name}
+<<<<<<< HEAD
                                 icon={<img src={tab.icon} alt={tab.name} />}
                                 iconPosition="start"
                                 sx={{
                                     marginLeft: '-10px',
                                     width: '240px',
+=======
+                                icon={
+                                    <img
+                                        src={tab.icon}
+                                        alt={tab.name}
+                                        style={{
+                                            height: '20px',
+                                            width: '20px',
+                                            objectFit: 'contain',
+                                        }}
+                                    />
+                                }
+                                iconPosition="start"
+                                sx={{
+                                    width: { xs: '100%', md: '240px' },
+                                    marginLeft: { md: '-10px' },
+                                    textTransform: 'none',
+>>>>>>> master
                                 }}
                             />
                         ))}
                     </Tabs>
                 </Box>
+<<<<<<< HEAD
                 <Box>
                     <img src={support} alt="Support" />
+=======
+
+                {/* Нижняя часть - поддержка и выход */}
+                <Box sx={{ width: '100%', mt: 4 }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            mb: 2,
+                        }}
+                    >
+                        <img
+                            src={support}
+                            alt="Support"
+                            style={{ maxWidth: '140px', height: 'auto' }}
+                        />
+                    </Box>
+
+>>>>>>> master
                     <Box
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             gap: '8px',
+<<<<<<< HEAD
                             marginTop: '30px',
+=======
+>>>>>>> master
                         }}
                     >
                         <img src={logout_icon} alt="Logout" />
                         <Link
                             to="#"
+<<<<<<< HEAD
+=======
+                            onClick={handleLogout}
+>>>>>>> master
                             style={{
                                 textDecoration: 'none',
                                 color: COLORS.gray,
                                 fontWeight: 600,
+<<<<<<< HEAD
                             }}
                             onClick={handleLogout}
+=======
+                                fontSize: '14px',
+                            }}
+>>>>>>> master
                         >
                             <Typography variant="inherit">Logout</Typography>
                         </Link>
                     </Box>
                 </Box>
             </Box>
+<<<<<<< HEAD
             <Box
                 sx={{
                     flex: 14,
+=======
+
+            {/* Content */}
+            <Box
+                sx={{
+                    flexGrow: 1,
+                    marginLeft: { md: '220px' },
+                    width: '100%',
+                    paddingTop: { xs: '20px', md: 0 },
+>>>>>>> master
                 }}
             >
                 {tabs.map((tabPanel, index) => (
@@ -181,12 +308,23 @@ function CustomTabPanel({ children, value, index, ...other }: TabPanelProps) {
         <Box
             hidden={value !== index}
             sx={{
+<<<<<<< HEAD
                 width: '1440px',
                 margin: '0 auto',
             }}
             {...other}
         >
             {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+=======
+                maxWidth: '1200px',
+                width: '100%',
+                margin: '0 auto',
+                padding: '20px',
+            }}
+            {...other}
+        >
+            {value === index && <Box>{children}</Box>}
+>>>>>>> master
         </Box>
     )
 }

@@ -63,7 +63,6 @@ export const MainPage = () => {
     const user = useSelector((state: RootState) => state.auth.user)
     const { activeTab, handleTabChange } = useActiveTab(routeToTab)
     const navigate = useNavigate()
-
     const dispatch: AppDispatch = useDispatch()
 
     const handleLogout = () => {
@@ -79,20 +78,22 @@ export const MainPage = () => {
             dispatch(fetchProducts(user.organization_id))
             dispatch(fetchCashBoxes(user.organization_id))
         }
-    }, [dispatch])
+    }, [dispatch, user?.organization_id])
+
     return (
         <Box
             sx={{
                 fontFamily: 'Nunito Sans, Arial, sans-serif',
                 display: 'flex',
-                backgroundColor: COLORS.lightBlue,
                 width: '100%',
+                backgroundColor: COLORS.lightBlue,
+                minHeight: '100vh',
             }}
         >
+            {/* Sidebar */}
             <Box
                 sx={{
                     position: 'fixed',
-                    flex: 1,
                     backgroundColor: COLORS.white,
                     margin: '15px',
                     borderRadius: '24px',
@@ -101,16 +102,14 @@ export const MainPage = () => {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     padding: '20px',
-                    height: '96vh',
+                    height: 'calc(100vh - 30px)',
+                    width: { xs: '80px', sm: '200px' },
+                    zIndex: 1000,
                 }}
             >
                 <Box>
-                    <Box
-                        sx={{
-                            marginBottom: '40px',
-                        }}
-                    >
-                        <img src={blue_log} alt="logo" />
+                    <Box sx={{ marginBottom: '40px' }}>
+                        <img src={blue_log} alt="logo" style={{ maxWidth: '100%' }} />
                     </Box>
                     <Tabs
                         value={activeTab}
@@ -120,6 +119,8 @@ export const MainPage = () => {
                             '& .MuiTab-root': {
                                 justifyContent: 'flex-start',
                                 textAlign: 'left',
+                                minHeight: '48px',
+                                paddingLeft: '8px',
                             },
                         }}
                     >
@@ -131,13 +132,14 @@ export const MainPage = () => {
                                 iconPosition="start"
                                 sx={{
                                     marginLeft: '-10px',
+                                    textTransform: 'none',
                                 }}
                             />
                         ))}
                     </Tabs>
                 </Box>
                 <Box>
-                    <img src={support} alt="Support" />
+                    <img src={support} alt="Support" style={{ width: '100%' }} />
                     <Box
                         sx={{
                             display: 'flex',
@@ -162,9 +164,15 @@ export const MainPage = () => {
                     </Box>
                 </Box>
             </Box>
+
+            {/* Main Content */}
             <Box
                 sx={{
-                    flex: 14,
+                    flexGrow: 1,
+                    marginLeft: { xs: '100px', sm: '230px' },
+                    width: '100%',
+                    padding: { xs: 1, sm: 2 },
+                    boxSizing: 'border-box',
                 }}
             >
                 {tabs.map((tabPanel, index) => (
@@ -188,12 +196,14 @@ function CustomTabPanel({ children, value, index, ...other }: TabPanelProps) {
         <Box
             hidden={value !== index}
             sx={{
-                width: '1440px',
+                width: '100%',
+                maxWidth: '1440px',
                 margin: '0 auto',
+                boxSizing: 'border-box',
             }}
             {...other}
         >
-            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+            {value === index && <Box sx={{ p: { xs: 2, md: 3 } }}>{children}</Box>}
         </Box>
     )
 }
