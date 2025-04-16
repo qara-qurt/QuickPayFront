@@ -7,10 +7,13 @@ export const paymentApi = {
         return response.data
     },
 
-    getPaymentsByOrganization: async (organizationId: number): Promise<PaymentResponse[]> => {
-        const response = await apiClient.get('/transactions', {
-            params: { organizationId },
-        })
+    getPaymentsByOrganizationAndCashboxIds: async (
+        organizationId: number,
+        cashboxId: String | undefined,
+    ): Promise<PaymentResponse[]> => {
+        const response = await apiClient.get(
+            `/transactions?organization_id=${organizationId}&cashbox_id=${cashboxId}`,
+        )
         return response.data
     },
 }

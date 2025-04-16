@@ -115,6 +115,7 @@ export const MarkModal: React.FC<IMarkModalProps> = ({ open, handleOpen, product
                         `Sizes: ${product.sizes.join(', ')}`,
                         `Colors: ${product.colors.join(', ')}`,
                         `Created at: ${product.created_at}`,
+                        `Count :${marks.length}`,
                     ].map((text, i) => (
                         <Typography key={i} variant="body2" fontSize="16px">
                             {text}

@@ -1,7 +1,7 @@
 import { Box, Typography, Button, Snackbar, Alert } from '@mui/material'
 import { COLORS } from '@/shared/style/colors'
 import qr_image from '@/assets/qr.svg'
-import { paymentApi } from '@/shared/api/payment/payjmentApi'
+import { paymentApi } from '@/shared/api/payment/paymentApi'
 import { useState } from 'react'
 
 interface QrCodeViewProps {

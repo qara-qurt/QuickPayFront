@@ -15,15 +15,11 @@ import { useState } from 'react'
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import { CashBox } from '@/shared/api/cashbox/types'
+import { PaymentResponse } from '@/shared/api/payment/types'
+import { formatDate } from '@/shared/utils/formatDate'
 
 interface ITransactionsProps {
-    transactions: {
-        transaction_id: string
-        date: string
-        payment: string
-        products: { name: string; price: number; count: number }[]
-        totalPrice: number
-    }[]
+    transactions: PaymentResponse[]
     cashBox: CashBox
 }
 
@@ -52,6 +48,7 @@ export const Transactions = ({ transactions, cashBox }: ITransactionsProps) => {
     const handleNavigateToCashBox = () => {
         navigate(`/cash-boxes/${cashBox.cashbox_id}/view`)
     }
+    console.log(transactions)
 
     return (
         <>
@@ -111,14 +108,14 @@ export const Transactions = ({ transactions, cashBox }: ITransactionsProps) => {
                     </TableHead>
                     <TableBody>
                         {paginatedRows.map(transaction => (
-                            <TableRow key={transaction.transaction_id}>
-                                <TableCell>{transaction.transaction_id}</TableCell>
-                                <TableCell>{transaction.date}</TableCell>
-                                <TableCell>{transaction.payment}</TableCell>
+                            <TableRow key={transaction.id}>
+                                <TableCell>{transaction.id}</TableCell>
+                                <TableCell>{formatDate(transaction.created_at)}</TableCell>
+                                <TableCell>{transaction.paymentMethod}</TableCell>
                                 <TableCell>
                                     {transaction.products.map((product, index) => (
                                         <Typography
-                                            key={`${transaction.transaction_id}-${index}`}
+                                            key={`${transaction.id}-${index}`}
                                             variant="body2"
                                         >
                                             {product.name}
@@ -126,7 +123,7 @@ export const Transactions = ({ transactions, cashBox }: ITransactionsProps) => {
                                     ))}
                                 </TableCell>
 
-                                <TableCell>{transaction.totalPrice}</TableCell>
+                                <TableCell>{transaction.totalAmount}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

@@ -6,7 +6,7 @@ import { ProductCard } from '@/shared/ui/cards/ProductCard'
 import { Product } from '@/shared/api/product/types'
 
 interface IProductProps {
-    products: Product[]
+    products: Product[] | []
 }
 
 export const Products: React.FC<IProductProps> = ({ products }) => {
@@ -52,7 +52,9 @@ export const Products: React.FC<IProductProps> = ({ products }) => {
             </Box>
             <Box>
                 {products.length > 0 ? (
-                    products.map((product, index) => <ProductCard key={index} product={product} />)
+                    products
+                        .slice(0, 3)
+                        .map((product, index) => <ProductCard key={index} product={product} />)
                 ) : (
                     <Typography variant="body1">No products</Typography>
                 )}

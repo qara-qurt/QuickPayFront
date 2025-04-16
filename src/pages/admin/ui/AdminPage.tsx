@@ -58,10 +58,6 @@ const tabs = [
 export const AdminPage = () => {
     const { activeTab, handleTabChange } = useActiveTab(routeToTab)
     const navigate = useNavigate()
-<<<<<<< HEAD
-
-=======
->>>>>>> master
     const dispatch = useDispatch()
 
     const handleLogout = () => {
@@ -76,19 +72,6 @@ export const AdminPage = () => {
             sx={{
                 fontFamily: 'Nunito Sans, Arial, sans-serif',
                 display: 'flex',
-<<<<<<< HEAD
-                backgroundColor: COLORS.lightBlue,
-                width: '100%',
-            }}
-        >
-            <Box
-                sx={{
-                    position: 'fixed',
-                    flex: 1,
-                    backgroundColor: COLORS.white,
-                    margin: '15px',
-                    borderRadius: '24px',
-=======
                 flexDirection: { xs: 'column', md: 'row' },
                 backgroundColor: COLORS.lightBlue,
                 width: '100%',
@@ -102,33 +85,10 @@ export const AdminPage = () => {
                     borderRadius: { md: '24px', xs: 0 },
                     padding: '20px',
                     margin: { xs: 0, md: '15px' },
->>>>>>> master
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-<<<<<<< HEAD
-                    padding: '20px',
-                    height: '96vh',
-                }}
-            >
-                <Box>
-                    <Box
-                        sx={{
-                            marginBottom: '40px',
-                            display: 'flex',
-                            alignItems: 'flex-end',
-                            gap: '10px',
-                        }}
-                    >
-                        <img src={blue_log} alt="logo" />
-                        <Typography variant="h6">Admin panel</Typography>
-                    </Box>
-                    <Tabs
-                        value={activeTab}
-                        onChange={(_, newValue) => handleTabChange(newValue)}
-                        orientation="vertical"
-=======
                     height: { xs: 'auto', md: '96vh' },
                     width: { xs: '100%', md: '260px' },
                     position: { md: 'fixed', xs: 'relative' },
@@ -165,18 +125,14 @@ export const AdminPage = () => {
                         variant="scrollable"
                         scrollButtons={false}
                         allowScrollButtonsMobile
->>>>>>> master
                         sx={{
                             '& .MuiTab-root': {
                                 justifyContent: 'flex-start',
                                 textAlign: 'left',
-<<<<<<< HEAD
-=======
                                 minHeight: '48px',
                                 padding: '8px 12px',
                                 gap: '10px',
                                 fontSize: '14px',
->>>>>>> master
                             },
                         }}
                     >
@@ -184,13 +140,6 @@ export const AdminPage = () => {
                             <Tab
                                 key={index}
                                 label={tab.name}
-<<<<<<< HEAD
-                                icon={<img src={tab.icon} alt={tab.name} />}
-                                iconPosition="start"
-                                sx={{
-                                    marginLeft: '-10px',
-                                    width: '240px',
-=======
                                 icon={
                                     <img
                                         src={tab.icon}
@@ -207,16 +156,11 @@ export const AdminPage = () => {
                                     width: { xs: '100%', md: '240px' },
                                     marginLeft: { md: '-10px' },
                                     textTransform: 'none',
->>>>>>> master
                                 }}
                             />
                         ))}
                     </Tabs>
                 </Box>
-<<<<<<< HEAD
-                <Box>
-                    <img src={support} alt="Support" />
-=======
 
                 {/* Нижняя часть - поддержка и выход */}
                 <Box sx={{ width: '100%', mt: 4 }}>
@@ -234,48 +178,30 @@ export const AdminPage = () => {
                         />
                     </Box>
 
->>>>>>> master
                     <Box
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             gap: '8px',
-<<<<<<< HEAD
-                            marginTop: '30px',
-=======
->>>>>>> master
                         }}
                     >
                         <img src={logout_icon} alt="Logout" />
                         <Link
                             to="#"
-<<<<<<< HEAD
-=======
                             onClick={handleLogout}
->>>>>>> master
                             style={{
                                 textDecoration: 'none',
                                 color: COLORS.gray,
                                 fontWeight: 600,
-<<<<<<< HEAD
-                            }}
-                            onClick={handleLogout}
-=======
                                 fontSize: '14px',
                             }}
->>>>>>> master
                         >
                             <Typography variant="inherit">Logout</Typography>
                         </Link>
                     </Box>
                 </Box>
             </Box>
-<<<<<<< HEAD
-            <Box
-                sx={{
-                    flex: 14,
-=======
 
             {/* Content */}
             <Box
@@ -284,7 +210,6 @@ export const AdminPage = () => {
                     marginLeft: { md: '220px' },
                     width: '100%',
                     paddingTop: { xs: '20px', md: 0 },
->>>>>>> master
                 }}
             >
                 {tabs.map((tabPanel, index) => (
@@ -308,14 +233,6 @@ function CustomTabPanel({ children, value, index, ...other }: TabPanelProps) {
         <Box
             hidden={value !== index}
             sx={{
-<<<<<<< HEAD
-                width: '1440px',
-                margin: '0 auto',
-            }}
-            {...other}
-        >
-            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-=======
                 maxWidth: '1200px',
                 width: '100%',
                 margin: '0 auto',
@@ -324,7 +241,6 @@ function CustomTabPanel({ children, value, index, ...other }: TabPanelProps) {
             {...other}
         >
             {value === index && <Box>{children}</Box>}
->>>>>>> master
         </Box>
     )
 }

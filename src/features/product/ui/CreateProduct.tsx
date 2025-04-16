@@ -1,9 +1,11 @@
+import { RootState } from '@/app/store'
 import { productApi } from '@/shared/api/product/productApi'
 import { useForm } from '@/shared/hooks/useForm'
 import { COLORS } from '@/shared/style/colors'
 import { CustomTextField } from '@/shared/ui'
 import { Alert, Box, Button, Typography } from '@mui/material'
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
 
 interface ICreateProductProps {
     onUpdate(): void
@@ -11,6 +13,7 @@ interface ICreateProductProps {
 }
 
 export const CreateProduct: React.FC<ICreateProductProps> = ({ onUpdate }) => {
+    const user = useSelector((state: RootState) => state.auth.user)
     const { formState, handleInputChange } = useForm({
         organization_id: '',
         name: '',
@@ -27,12 +30,16 @@ export const CreateProduct: React.FC<ICreateProductProps> = ({ onUpdate }) => {
         setErrors('')
         setSuccess('')
 
-        const organization_id = Number(formState.organization_id)
+        let organization_id = Number(formState.organization_id)
         const name = formState.name as string
         const price = Number(formState.price)
         const sizes = (formState.sizes as string).split(',').map(s => s.trim())
         const colors = (formState.colors as string).split(',').map(c => c.trim())
         const description = formState.description as string
+
+        if (user?.roles[0] !== 'ADMIN') {
+            organization_id = user?.organization_id || organization_id
+        }
 
         if (
             !organization_id ||
@@ -68,18 +75,22 @@ export const CreateProduct: React.FC<ICreateProductProps> = ({ onUpdate }) => {
             <Typography variant="h6" sx={{ marginBottom: '20px' }}>
                 Create Product
             </Typography>
+
             <Box>
-                <CustomTextField
-                    id="organization_id"
-                    label="Organization ID"
-                    type="number"
-                    placeholder="Organization ID"
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    value={formState.organization_id}
-                    onChange={e => handleInputChange(e, 'organization_id')}
-                />
+                {user?.roles[0] === 'ADMIN' && (
+                    <CustomTextField
+                        id="organization_id"
+                        label="Organization ID"
+                        type="number"
+                        placeholder="Organization ID"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        value={formState.organization_id}
+                        onChange={e => handleInputChange(e, 'organization_id')}
+                    />
+                )}
+
                 <CustomTextField
                     id="name"
                     label="Product Name"

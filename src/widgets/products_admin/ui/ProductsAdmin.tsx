@@ -168,7 +168,6 @@ export const ProductsAdmin: React.FC<IProductsAdminProps> = ({ organization_id }
                                     { label: 'Description', field: 'description' },
                                     { label: 'Price', field: 'price' },
                                     { label: 'Sizes', field: 'sizes' },
-                                    { label: 'Image', field: 'image' },
                                     { label: 'Colors', field: 'colors' },
                                     { label: 'Organization ID', field: 'organization_id' },
                                     { label: 'Created At', field: 'createdAt' },

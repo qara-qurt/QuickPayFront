@@ -4,6 +4,9 @@ import { Transactions } from './Transactions'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/app/store'
 import { COLORS } from '@/shared/style/colors'
+import { useEffect, useState } from 'react'
+import { paymentApi } from '@/shared/api/payment/paymentApi'
+import { PaymentResponse } from '@/shared/api/payment/types'
 
 const routeToTab: Record<string, number> = {
     '/cash-boxes?id=PN0001265': 0,
@@ -11,155 +14,29 @@ const routeToTab: Record<string, number> = {
     '/cash-boxes?id=PN0002265': 2,
 }
 
-const transactions = [
-    {
-        transaction_id: 'PN0101265',
-        date: '2021-10-10 13:40',
-        payment: 'Kaspi QR',
-        products: [
-            { name: 'Product 1', price: 100, count: 2 },
-            { name: 'Product 2', price: 200, count: 3 },
-        ],
-        totalPrice: 1400,
-    },
-    {
-        transaction_id: 'PN2001265',
-        date: '2021-10-10 13:40',
-        payment: 'Kaspi QR',
-        products: [
-            { name: 'Product 1', price: 100, count: 2 },
-            { name: 'Product 2', price: 200, count: 3 },
-        ],
-        totalPrice: 1400,
-    },
-    {
-        transaction_id: 'PN3001265',
-        date: '2021-10-10 13:40',
-        payment: 'Kaspi QR',
-        products: [
-            { name: 'Product 1', price: 100, count: 2 },
-            { name: 'Product 2', price: 200, count: 3 },
-        ],
-        totalPrice: 1400,
-    },
-    {
-        transaction_id: 'PN4001265',
-        date: '2021-10-10 13:40',
-        payment: 'Kaspi QR',
-        products: [
-            { name: 'Product 1', price: 100, count: 2 },
-            { name: 'Product 2', price: 200, count: 3 },
-        ],
-        totalPrice: 1400,
-    },
-    {
-        transaction_id: 'PN5001265',
-        date: '2021-10-10 13:40',
-        payment: 'Kaspi QR',
-        products: [
-            { name: 'Product 1', price: 100, count: 2 },
-            { name: 'Product 2', price: 200, count: 3 },
-        ],
-        totalPrice: 1400,
-    },
-    {
-        transaction_id: 'PN6001265',
-        date: '2021-10-10 13:40',
-        payment: 'Kaspi QR',
-        products: [
-            { name: 'Product 1', price: 100, count: 2 },
-            { name: 'Product 2', price: 200, count: 3 },
-        ],
-        totalPrice: 1400,
-    },
-    {
-        transaction_id: 'PN7001265',
-        date: '2021-10-10 13:40',
-        payment: 'Kaspi QR',
-        products: [
-            { name: 'Product 1', price: 100, count: 2 },
-            { name: 'Product 2', price: 200, count: 3 },
-        ],
-        totalPrice: 1400,
-    },
-    {
-        transaction_id: 'PN8001265',
-        date: '2021-10-10 13:40',
-        payment: 'Kaspi QR',
-        products: [
-            { name: 'Product 1', price: 100, count: 2 },
-            { name: 'Product 2', price: 200, count: 3 },
-        ],
-        totalPrice: 1400,
-    },
-    {
-        transaction_id: 'PN9001265',
-        date: '2021-10-10 13:40',
-        payment: 'Kaspi QR',
-        products: [
-            { name: 'Product 1', price: 100, count: 2 },
-            { name: 'Product 2', price: 200, count: 3 },
-        ],
-        totalPrice: 1400,
-    },
-    {
-        transaction_id: 'PN0011265',
-        date: '2021-10-10 13:40',
-        payment: 'Kaspi QR',
-        products: [
-            { name: 'Product 1', price: 100, count: 2 },
-            { name: 'Product 2', price: 200, count: 3 },
-        ],
-        totalPrice: 1400,
-    },
-    {
-        transaction_id: 'PN0021265',
-        date: '2021-10-10 13:40',
-        payment: 'Kaspi QR',
-        products: [
-            { name: 'Product 1', price: 100, count: 2 },
-            { name: 'Product 2', price: 200, count: 3 },
-        ],
-        totalPrice: 1400,
-    },
-    {
-        transaction_id: 'PN0031265',
-        date: '2021-10-10 13:40',
-        payment: 'Kaspi QR',
-        products: [
-            { name: 'Product 1', price: 100, count: 2 },
-            { name: 'Product 2', price: 200, count: 3 },
-        ],
-        totalPrice: 1400,
-    },
-    {
-        transaction_id: 'PN0041265',
-        date: '2021-10-10 13:40',
-        payment: 'Kaspi QR',
-        products: [
-            { name: 'Product 1', price: 100, count: 2 },
-            { name: 'Product 2', price: 200, count: 3 },
-        ],
-        totalPrice: 1400,
-    },
-
-    {
-        transaction_id: 'PN0006265',
-        date: '2021-10-10 13:40',
-        payment: 'Kaspi QR',
-        products: [
-            { name: 'Product 1', price: 100, count: 2 },
-            { name: 'Product 2', price: 200, count: 3 },
-        ],
-        totalPrice: 1400,
-    },
-]
-
 export const CashBoxes = () => {
     const { activeTab, handleTabChange } = useActiveTab(routeToTab)
     const cashBoxes = useSelector((state: RootState) => state.cashBoxes.data)
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+    const organization = useSelector((state: RootState) => state.users.organization)
+
+    const [transactions, setTransactions] = useState<PaymentResponse[]>([])
+
+    const currentCashbox = cashBoxes[activeTab]
+
+    useEffect(() => {
+        if (currentCashbox && organization?.id) {
+            paymentApi
+                .getPaymentsByOrganizationAndCashboxIds(organization.id, currentCashbox.cashbox_id)
+                .then(data => setTransactions(data))
+                .catch(err => {
+                    console.error('Error fetching transactions:', err)
+                    setTransactions([])
+                })
+        }
+        console.log('Cashbox:', transactions)
+    }, [activeTab, cashBoxes, organization])
 
     return (
         <Box sx={{ padding: 2 }}>

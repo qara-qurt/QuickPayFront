@@ -1,12 +1,13 @@
 import { Product } from '@/shared/api/product/types'
 import { COLORS } from '@/shared/style/colors'
-import { Box, colors, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 
 interface IProductCardProps {
     product: Product
 }
 
 export const ProductCard = ({ product }: IProductCardProps) => {
+    console.log('product', product)
     return (
         <Box
             sx={{
@@ -32,14 +33,14 @@ export const ProductCard = ({ product }: IProductCardProps) => {
                 >
                     {product.name}
                 </Typography>
-                <Typography variant="inherit">{product.colors.join(', ')}</Typography>
+                {/* <Typography variant="inherit">{product.colors.join(', ')}</Typography> */}
             </Box>
             <Box sx={{ flex: 3 }}>
                 <Typography variant="inherit" sx={{ color: COLORS.gray }}>
                     Information
                 </Typography>
                 <Typography>{product.description}</Typography>
-                <Typography>{product.sizes.join(', ')}</Typography>
+                {/* <Typography>{product.sizes.join(', ')}</Typography> */}
             </Box>
             <Box sx={{ flex: 1 }}>
                 <Typography variant="inherit" sx={{ color: COLORS.gray }}>

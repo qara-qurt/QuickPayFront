@@ -27,7 +27,6 @@ export const Product: React.FC<IProductProps> = ({ product, onUpdate }) => {
         price: product.price,
         sizes: product.sizes.join(', '),
         colors: product.colors.join(', '),
-        image: product.image,
         description: product.description,
         organization_id: product.organization_id,
         created_at: product.created_at,
@@ -57,9 +56,9 @@ export const Product: React.FC<IProductProps> = ({ product, onUpdate }) => {
                 typeof formState.colors == 'string'
                     ? formState.colors.split(', ').map(c => c.trim())
                     : [],
-            image: String(formState.image),
             description: String(formState.description),
             organization_id: Number(formState.organization_id),
+            image: '',
         }
 
         try {
@@ -88,7 +87,6 @@ export const Product: React.FC<IProductProps> = ({ product, onUpdate }) => {
             <TableCell>{product.description}</TableCell>
             <TableCell>{product.price}</TableCell>
             <TableCell>{product.sizes.join(', ')}</TableCell>
-            <TableCell>{product.image}</TableCell>
             <TableCell>{product.colors.join(', ')}</TableCell>
             <TableCell>{product.organization_id}</TableCell>
             <TableCell>{product.created_at ? formatDate(product.created_at) : 'Unknown'}</TableCell>

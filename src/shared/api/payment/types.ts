@@ -1,3 +1,5 @@
+import { Product } from '../product/types'
+
 export interface CreatePaymentRequest {
     cashboxId: string
     productIds: number[]
@@ -6,12 +8,16 @@ export interface CreatePaymentRequest {
     organizationId: number
 }
 
+export interface CreatePaymentResponse {
+    id: number
+}
+
 export interface PaymentResponse {
     id: number
     cashboxId: string
     totalAmount: number
     paymentMethod: string
     organizationId: number
-    createdAt: string
-    updatedAt: string
+    products: Product[]
+    created_at: string
 }
