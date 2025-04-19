@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
     Box,
     Table,
@@ -20,15 +19,6 @@ interface IEmployeeTableProps {
 
 const EmployeeTable: React.FC<IEmployeeTableProps> = ({ employees }) => {
     const navigate = useNavigate()
-    const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null)
-
-    const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setOpenPopover(event.currentTarget)
-    }
-
-    const handleClosePopover = () => {
-        setOpenPopover(null)
-    }
 
     return (
         <Box

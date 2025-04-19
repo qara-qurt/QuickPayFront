@@ -29,8 +29,8 @@ import { format, subDays, isSameDay } from 'date-fns'
 export const Analytics = () => {
     const [transactions, setTransactions] = useState<PaymentResponse[]>([])
     const cashBoxes = useSelector((state: RootState) => state.cashBoxes.data)
-    const link = `http://localhost:8501/transactions?organization_id=${cashBoxes[0].organization_id}`
-
+    // const link = `http://localhost:8501/transactions?organization_id=${cashBoxes[0].organization_id}`
+    // const link = `http://localhost:8080/swagger-ui/index.html#/`
     useEffect(() => {
         if (cashBoxes.length > 0) {
             paymentApi
@@ -198,7 +198,7 @@ export const Analytics = () => {
                             backgroundColor: '#1565c0',
                         },
                     }}
-                    href={link}
+                    href="/swagger-ui/index.html"
                     target="_blank"
                 >
                     Go to Detailed Analytics →

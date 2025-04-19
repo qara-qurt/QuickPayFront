@@ -1,4 +1,4 @@
-import { cashBoxApi, companyApi } from '@/shared/api'
+import { cashBoxApi } from '@/shared/api'
 import { useForm } from '@/shared/hooks/useForm'
 import { COLORS } from '@/shared/style/colors'
 import { CustomTextField } from '@/shared/ui'

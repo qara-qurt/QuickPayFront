@@ -73,7 +73,7 @@ export const LoginForm = () => {
                         control={
                             <Checkbox
                                 checked={checkbox}
-                                onChange={(e, checked) => setCheckbox(checked)}
+                                onChange={(_, checked) => setCheckbox(checked)}
                             />
                         }
                     />
