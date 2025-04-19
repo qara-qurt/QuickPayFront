@@ -4,9 +4,6 @@ import { Transactions } from './Transactions'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/app/store'
 import { COLORS } from '@/shared/style/colors'
-import { useEffect, useState } from 'react'
-import { paymentApi } from '@/shared/api/payment/paymentApi'
-import { PaymentResponse } from '@/shared/api/payment/types'
 
 const routeToTab: Record<string, number> = {
     '/cash-boxes?id=PN0001265': 0,
@@ -17,26 +14,9 @@ const routeToTab: Record<string, number> = {
 export const CashBoxes = () => {
     const { activeTab, handleTabChange } = useActiveTab(routeToTab)
     const cashBoxes = useSelector((state: RootState) => state.cashBoxes.data)
+    const organization = useSelector((state: RootState) => state.users.organization)
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-    const organization = useSelector((state: RootState) => state.users.organization)
-
-    const [transactions, setTransactions] = useState<PaymentResponse[]>([])
-
-    const currentCashbox = cashBoxes[activeTab]
-
-    useEffect(() => {
-        if (currentCashbox && organization?.id) {
-            paymentApi
-                .getPaymentsByOrganizationAndCashboxIds(organization.id, currentCashbox.cashbox_id)
-                .then(data => setTransactions(data))
-                .catch(err => {
-                    console.error('Error fetching transactions:', err)
-                    setTransactions([])
-                })
-        }
-        console.log('Cashbox:', transactions)
-    }, [activeTab, cashBoxes, organization])
 
     return (
         <Box sx={{ padding: 2 }}>
@@ -51,6 +31,7 @@ export const CashBoxes = () => {
                     gap: 2,
                 }}
             >
+                {/* Left Tabs */}
                 <Box
                     sx={{
                         backgroundColor: COLORS.white,
@@ -98,10 +79,11 @@ export const CashBoxes = () => {
                     </Tabs>
                 </Box>
 
+                {/* Right Panel */}
                 <Box sx={{ flex: 1, width: '100%' }}>
                     {cashBoxes.map((cashBox, index) => (
                         <CustomTabPanel value={activeTab} index={index} key={cashBox.id}>
-                            <Transactions transactions={transactions} cashBox={cashBox} />
+                            {organization?.id && <Transactions cashBox={cashBox} />}
                         </CustomTabPanel>
                     ))}
                 </Box>

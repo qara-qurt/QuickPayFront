@@ -1,4 +1,4 @@
-import { COLORS } from '@/shared/style/colors'
+import { useEffect, useState } from 'react'
 import {
     Box,
     Button,
@@ -11,187 +11,190 @@ import {
     TableRow,
     Typography,
 } from '@mui/material'
-import { useState } from 'react'
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
-import { CashBox } from '@/shared/api/cashbox/types'
+import { paymentApi } from '@/shared/api/payment/paymentApi'
 import { PaymentResponse } from '@/shared/api/payment/types'
+import { CashBox } from '@/shared/api/cashbox/types'
+import { COLORS } from '@/shared/style/colors'
 import { formatDate } from '@/shared/utils/formatDate'
 
-interface ITransactionsProps {
-    transactions: PaymentResponse[]
+interface TransactionsProps {
     cashBox: CashBox
 }
 
-export const Transactions = ({ transactions, cashBox }: ITransactionsProps) => {
+export const Transactions = ({ cashBox }: TransactionsProps) => {
     const navigate = useNavigate()
-    const [currentPage, setCurrentPage] = useState(0)
+    const [transactions, setTransactions] = useState<PaymentResponse[]>([])
+    const [currentPage, setCurrentPage] = useState(1)
+    const [totalCount, setTotalCount] = useState(0)
+    const [isLoading, setIsLoading] = useState(false)
     const rowsPerPage = 20
 
-    const handleNextPage = () => {
-        if (currentPage < Math.ceil(transactions.length / rowsPerPage) - 1) {
-            setCurrentPage(prevPage => prevPage + 1)
+    const fetchTransactions = async () => {
+        setIsLoading(true)
+        try {
+            const res = await paymentApi.getPaymentsByOrganizationAndCashboxIds(
+                cashBox.organization_id,
+                cashBox.cashbox_id,
+                currentPage,
+                rowsPerPage,
+            )
+            console.log(res)
+            setTransactions(Array.isArray(res.data) ? res.data : [])
+            setTotalCount(res.totalCount || 0) // ✅ вот это важно!
+        } catch (err) {
+            console.error('Error fetching transactions:', err)
+            setTransactions([])
+            setTotalCount(0)
+        } finally {
+            setIsLoading(false)
         }
     }
 
-    const handlePreviousPage = () => {
-        if (currentPage > 0) {
-            setCurrentPage(prevPage => prevPage - 1)
-        }
-    }
-
-    const paginatedRows = transactions.slice(
-        currentPage * rowsPerPage,
-        (currentPage + 1) * rowsPerPage,
-    )
+    useEffect(() => {
+        fetchTransactions()
+    }, [cashBox.cashbox_id, currentPage])
 
     const handleNavigateToCashBox = () => {
         navigate(`/cash-boxes/${cashBox.cashbox_id}/view`)
     }
 
     const today = new Date()
-    const todayTransactions = transactions.filter(transaction => {
-        const createdAtDate = new Date(transaction.created_at)
-        return (
-            createdAtDate.getDate() === today.getDate() &&
-            createdAtDate.getMonth() === today.getMonth() &&
-            createdAtDate.getFullYear() === today.getFullYear()
-        )
-    })
 
-    const todayCash = todayTransactions.reduce((acc, transaction) => {
-        return acc + transaction.totalAmount
-    }, 0)
+    const todayCash = transactions?.length
+        ? transactions
+              .filter(t => {
+                  const d = new Date(t.created_at)
+                  return (
+                      d.getFullYear() === today.getFullYear() &&
+                      d.getMonth() === today.getMonth() &&
+                      d.getDate() === today.getDate()
+                  )
+              })
+              .reduce((sum, t) => sum + t.totalAmount, 0)
+        : 0
 
-    const totalCash = transactions.reduce((acc, transaction) => {
-        return acc + transaction.totalAmount
-    }, 0)
+    const totalCash = transactions?.length
+        ? transactions.reduce((sum, t) => sum + t.totalAmount, 0)
+        : 0
 
     return (
         <>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginBottom: '20px',
-                }}
-            >
+            {/* Header */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                 <Box>
                     <Typography variant="h6">Transactions</Typography>
-                    <Typography variant="inherit">1456</Typography>
+                    <Typography variant="inherit">{totalCount}</Typography>
                 </Box>
-                <Box>
-                    <Button
-                        variant="contained"
-                        onClick={handleNavigateToCashBox}
-                        sx={{
-                            borderRadius: 3,
-                            py: 1,
-                            fontWeight: 700,
-                            backgroundColor: COLORS.blue,
-                            textTransform: 'none',
-                        }}
-                    >
-                        Open CashBox
-                    </Button>
-                </Box>
-            </Box>
-
-            <TableContainer sx={{ maxHeight: '75vh', overflowY: 'auto' }}>
-                <Table
-                    aria-labelledby="tableTitle"
-                    stickyHeader
+                <Button
+                    variant="contained"
+                    onClick={handleNavigateToCashBox}
                     sx={{
-                        '--TableCell-headBackground': '#f4f6f8',
-                        '--Table-headerUnderlineThickness': '1px',
-                        '--TableRow-hoverBackground': '#e8eaf0',
-                        '--TableCell-paddingY': '8px',
-                        '--TableCell-paddingX': '16px',
-                        border: '1px solid #e0e0e0',
-                        borderRadius: '20px',
-                        padding: '10px',
-                        backgroundColor: '#ffffff',
+                        borderRadius: 3,
+                        py: 1,
+                        fontWeight: 700,
+                        backgroundColor: COLORS.blue,
+                        textTransform: 'none',
                     }}
                 >
+                    Open CashBox
+                </Button>
+            </Box>
+
+            {/* Table */}
+            <TableContainer
+                sx={{
+                    maxHeight: '75vh',
+                    backgroundColor: '#fff',
+                    borderRadius: 3,
+                    border: '1px solid #e0e0e0',
+                }}
+            >
+                <Table stickyHeader>
                     <TableHead>
-                        <TableRow sx={{ backgroundColor: COLORS.lightBlue, fontWeight: 700 }}>
-                            <TableCell sx={{ fontWeight: 700 }}>Transaction ID</TableCell>
-                            <TableCell sx={{ fontWeight: 700 }}>Date</TableCell>
-                            <TableCell sx={{ fontWeight: 700 }}>Payment</TableCell>
-                            <TableCell sx={{ fontWeight: 700 }}>Products</TableCell>
-                            <TableCell sx={{ fontWeight: 700 }}>Total Price</TableCell>
+                        <TableRow sx={{ backgroundColor: COLORS.lightBlue }}>
+                            <TableCell>Transaction ID</TableCell>
+                            <TableCell>Date</TableCell>
+                            <TableCell>Payment</TableCell>
+                            <TableCell>Products</TableCell>
+                            <TableCell>Total Price</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {paginatedRows.map(transaction => (
-                            <TableRow key={transaction.id}>
-                                <TableCell>{transaction.id}</TableCell>
-                                <TableCell>{formatDate(transaction.created_at)}</TableCell>
-                                <TableCell>{transaction.paymentMethod}</TableCell>
-                                <TableCell>
-                                    {transaction.products.map((product, index) => (
-                                        <Typography
-                                            key={`${transaction.id}-${index}`}
-                                            variant="body2"
-                                        >
-                                            {product.name}
-                                        </Typography>
-                                    ))}
+                        {!isLoading && transactions.length > 0 ? (
+                            transactions.map(transaction => (
+                                <TableRow key={transaction.id}>
+                                    <TableCell>{transaction.id}</TableCell>
+                                    <TableCell>{formatDate(transaction.created_at)}</TableCell>
+                                    <TableCell>{transaction.paymentMethod}</TableCell>
+                                    <TableCell>
+                                        {transaction.products.map((product, index) => (
+                                            <Typography key={index} variant="body2">
+                                                {product.name}
+                                            </Typography>
+                                        ))}
+                                    </TableCell>
+                                    <TableCell>{transaction.totalAmount}</TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={5}>
+                                    <Typography variant="body2" textAlign="center" sx={{ py: 2 }}>
+                                        {isLoading ? 'Loading...' : 'No transactions found'}
+                                    </Typography>
                                 </TableCell>
-
-                                <TableCell>{transaction.totalAmount}</TableCell>
                             </TableRow>
-                        ))}
+                        )}
                     </TableBody>
                 </Table>
             </TableContainer>
 
+            {/* Cash Summary */}
             <Box
                 sx={{
-                    color: COLORS.white,
                     backgroundColor: COLORS.blue,
+                    color: COLORS.white,
                     borderRadius: '20px',
-                    padding: '20px 20px',
-                    marginTop: '20px',
+                    p: 2,
+                    mt: 2,
                     display: 'flex',
                     justifyContent: 'space-between',
-                    alignItems: 'center',
                 }}
             >
                 <Box>
                     <Typography>Today Cash</Typography>
-                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                        {todayCash}
-                        {' kz'}
-                    </Typography>
+                    <Typography variant="h6">{todayCash} kz</Typography>
                 </Box>
                 <Box>
                     <Typography>Total Cash</Typography>
-                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                        {totalCash}
-                        {' kz'}
-                    </Typography>
+                    <Typography variant="h6">{totalCash} kz</Typography>
                 </Box>
             </Box>
 
+            {/* Pagination */}
             <Box
                 sx={{
                     display: 'flex',
-                    justifyContent: 'space-between',
+                    justifyContent: 'center',
                     alignItems: 'center',
-                    marginTop: '20px',
+                    gap: 2,
+                    mt: 2,
                 }}
             >
-                <IconButton onClick={handlePreviousPage} disabled={currentPage === 0}>
+                <IconButton
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                >
                     <KeyboardArrowLeft />
                 </IconButton>
-                <Typography variant="body2">{`${currentPage + 1} / ${Math.ceil(
-                    transactions.length / rowsPerPage,
-                )}`}</Typography>
+                <Typography variant="body2">
+                    Page {currentPage} of {Math.max(1, Math.ceil(totalCount / rowsPerPage))}
+                </Typography>
                 <IconButton
-                    onClick={handleNextPage}
-                    disabled={currentPage === Math.ceil(transactions.length / rowsPerPage) - 1}
+                    onClick={() => setCurrentPage(prev => prev + 1)}
+                    disabled={currentPage >= Math.ceil(totalCount / rowsPerPage)}
                 >
                     <KeyboardArrowRight />
                 </IconButton>

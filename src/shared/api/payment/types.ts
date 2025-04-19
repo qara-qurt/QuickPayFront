@@ -21,3 +21,8 @@ export interface PaymentResponse {
     products: Product[]
     created_at: string
 }
+
+export interface Payment {
+    totalCount: number
+    data: PaymentResponse[]
+}

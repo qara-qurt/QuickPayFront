@@ -36,7 +36,7 @@ export const Analytics = () => {
             paymentApi
                 .getPaymentsByOrganizationAndCashboxIds(cashBoxes[0].organization_id)
                 .then(res => {
-                    setTransactions(res as PaymentResponse[])
+                    setTransactions(res.data as PaymentResponse[])
                 })
                 .catch(err => {
                     console.error('Error fetching payments:', err)

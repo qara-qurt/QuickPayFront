@@ -7,7 +7,7 @@ import { CashBox } from '@/shared/api/cashbox/types'
 import { formatDate } from '@/shared/utils/formatDate'
 import { useEffect, useState } from 'react'
 import { paymentApi } from '@/shared/api/payment/paymentApi'
-import { PaymentResponse } from '@/shared/api/payment/types'
+import { Payment, PaymentResponse } from '@/shared/api/payment/types'
 
 interface ICashBoxCardProps {
     cachBox: CashBox
@@ -19,7 +19,10 @@ export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
     useEffect(() => {
         paymentApi
             .getPaymentsByOrganizationAndCashboxIds(cachBox.organization_id, cachBox.cashbox_id)
-            .then((data: PaymentResponse[]) => setTransactions(data))
+            .then((data: Payment) => {
+                console.log(data)
+                setTransactions(data.data)
+            })
             .catch(err => {
                 console.error('Error fetching transactions:', err)
                 setTransactions([])
@@ -30,7 +33,7 @@ export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
         paymentApi
             .getPaymentsByOrganizationAndCashboxIds(cachBox.organization_id, cachBox.cashbox_id)
             .then(res => {
-                setTransactions(res)
+                setTransactions(res.data)
             })
             .catch(err => {
                 console.error('Error fetching payments:', err)

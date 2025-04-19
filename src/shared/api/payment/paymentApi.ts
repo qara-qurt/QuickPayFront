@@ -1,25 +1,21 @@
 import { apiClient } from '../axiosInstance'
-import { CreatePaymentRequest, PaymentResponse } from './types'
+import { CreatePaymentRequest, CreatePaymentResponse, Payment } from './types'
 
 export const paymentApi = {
-    createPayment: async (data: CreatePaymentRequest): Promise<PaymentResponse> => {
+    createPayment: async (data: CreatePaymentRequest): Promise<CreatePaymentResponse> => {
         const response = await apiClient.post('/transactions', data)
         return response.data
     },
 
     getPaymentsByOrganizationAndCashboxIds: async (
         organizationId: number,
-        cashboxId?: String,
-    ): Promise<PaymentResponse[]> => {
-        let response
-        if (cashboxId === undefined) {
-            response = await apiClient.get(`/transactions?organization_id=${organizationId}`)
-        } else {
-            response = await apiClient.get(
-                `/transactions?organization_id=${organizationId}&cashbox_id=${cashboxId}`,
-            )
-        }
-
+        cashboxId?: string,
+        page: number = 1,
+        limit: number = 20,
+    ): Promise<Payment> => {
+        const baseUrl = `/transactions?organization_id=${organizationId}&page=${page}&limit=${limit}`
+        const url = cashboxId ? `${baseUrl}&cashbox_id=${cashboxId}` : baseUrl
+        const response = await apiClient.get(url)
         return response.data
     },
 }
