@@ -135,7 +135,7 @@ export const CashBoxPage = () => {
                         <QrCodeView
                             organizationId={cashbox?.organization_id ?? 0}
                             cashboxId={id ?? ''}
-                            amount={data.reduce((total, p) => total + p.price, 0)}
+                            data={data}
                             method={selectedMethod ?? ''}
                             onBack={handleGoBack}
                         />

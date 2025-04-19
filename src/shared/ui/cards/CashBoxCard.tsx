@@ -5,12 +5,56 @@ import calendar from '@/assets/products-menu.svg'
 import priority from '@/assets/priority.svg'
 import { CashBox } from '@/shared/api/cashbox/types'
 import { formatDate } from '@/shared/utils/formatDate'
+import { useEffect, useState } from 'react'
+import { paymentApi } from '@/shared/api/payment/paymentApi'
+import { PaymentResponse } from '@/shared/api/payment/types'
 
 interface ICashBoxCardProps {
     cachBox: CashBox
 }
 
 export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
+    const [transactions, setTransactions] = useState<PaymentResponse[]>([])
+
+    useEffect(() => {
+        paymentApi
+            .getPaymentsByOrganizationAndCashboxIds(cachBox.organization_id, cachBox.cashbox_id)
+            .then((data: PaymentResponse[]) => setTransactions(data))
+            .catch(err => {
+                console.error('Error fetching transactions:', err)
+                setTransactions([])
+            })
+    }, [])
+
+    useEffect(() => {
+        paymentApi
+            .getPaymentsByOrganizationAndCashboxIds(cachBox.organization_id, cachBox.cashbox_id)
+            .then(res => {
+                setTransactions(res)
+            })
+            .catch(err => {
+                console.error('Error fetching payments:', err)
+            })
+    }, [])
+
+    const today = new Date()
+    const todayTransactions = transactions.filter(transaction => {
+        const createdAtDate = new Date(transaction.created_at)
+        return (
+            createdAtDate.getDate() === today.getDate() &&
+            createdAtDate.getMonth() === today.getMonth() &&
+            createdAtDate.getFullYear() === today.getFullYear()
+        )
+    })
+
+    const todayCash = todayTransactions.reduce((acc, transaction) => {
+        return acc + transaction.totalAmount
+    }, 0)
+
+    const totalCash = transactions.reduce((acc, transaction) => {
+        return acc + transaction.totalAmount
+    }, 0)
+
     return (
         <Box
             sx={{
@@ -106,7 +150,7 @@ export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
                                 fontWeight: 600,
                             }}
                         >
-                            {/* {cachBox.information.todayCash}kz */}
+                            {todayCash}kz
                         </Typography>
                     </Box>
                     <Box>
@@ -124,7 +168,7 @@ export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
                                 fontWeight: 600,
                             }}
                         >
-                            {/* {cachBox.information.totalCash}kz */}
+                            {totalCash}kz
                         </Typography>
                     </Box>
                     <Box>
@@ -142,7 +186,7 @@ export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
                                 fontWeight: 600,
                             }}
                         >
-                            {/* {cachBox.information.transactionalToday} */}
+                            {todayTransactions.length}
                         </Typography>
                     </Box>
                     <Box>
@@ -160,7 +204,7 @@ export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
                                 fontWeight: 600,
                             }}
                         >
-                            {/* {cachBox.information.transactionalTotal} */}
+                            {transactions.length}
                         </Typography>
                     </Box>
                 </Box>

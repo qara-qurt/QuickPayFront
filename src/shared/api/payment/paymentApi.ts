@@ -9,11 +9,17 @@ export const paymentApi = {
 
     getPaymentsByOrganizationAndCashboxIds: async (
         organizationId: number,
-        cashboxId: String | undefined,
+        cashboxId?: String,
     ): Promise<PaymentResponse[]> => {
-        const response = await apiClient.get(
-            `/transactions?organization_id=${organizationId}&cashbox_id=${cashboxId}`,
-        )
+        let response
+        if (cashboxId === undefined) {
+            response = await apiClient.get(`/transactions?organization_id=${organizationId}`)
+        } else {
+            response = await apiClient.get(
+                `/transactions?organization_id=${organizationId}&cashbox_id=${cashboxId}`,
+            )
+        }
+
         return response.data
     },
 }

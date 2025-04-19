@@ -3,11 +3,12 @@ import { COLORS } from '@/shared/style/colors'
 import qr_image from '@/assets/qr.svg'
 import { paymentApi } from '@/shared/api/payment/paymentApi'
 import { useState } from 'react'
+import { Product } from '@/shared/api/product/types'
 
 interface QrCodeViewProps {
     organizationId: number
     cashboxId: string
-    amount: number
+    data: Product[]
     method: string
     onBack: () => void
     onConfirm?: () => void
@@ -16,13 +17,14 @@ interface QrCodeViewProps {
 export const QrCodeView = ({
     organizationId,
     cashboxId,
-    amount,
+    data,
     method,
     onBack,
     onConfirm,
 }: QrCodeViewProps) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
+    const totalAmount = data.reduce((total, p) => total + p.price, 0)
 
     const handlePay = () => {
         if (loading) return
@@ -32,8 +34,8 @@ export const QrCodeView = ({
             .createPayment({
                 cashboxId,
                 organizationId,
-                productIds: [1, 1],
-                totalAmount: amount,
+                productIds: data.map(p => p.id),
+                totalAmount: totalAmount,
                 paymentMethod: method,
             })
             .then(res => {
@@ -62,7 +64,7 @@ export const QrCodeView = ({
                 onClick={handlePay}
             />
             <Typography variant="h6" sx={{ marginTop: '20px' }}>
-                Total price: {amount} KZ
+                Total price: {totalAmount} KZ
             </Typography>
 
             <Box sx={{ marginTop: '30px', display: 'flex', justifyContent: 'center', gap: 2 }}>
