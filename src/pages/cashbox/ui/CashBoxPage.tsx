@@ -114,7 +114,7 @@ export const CashBoxPage = () => {
                     <img src={blue_logo} alt="logo" />
                     <Typography variant="h4">Quick Pay</Typography>
                 </Box>
-                <Box sx={{ marginTop: '50px' }}>
+                <Box sx={{ marginTop: '30px' }}>
                     <Typography variant="inherit" sx={{ color: COLORS.gray }}>
                         {id}
                     </Typography>

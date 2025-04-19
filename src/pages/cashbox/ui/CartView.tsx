@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from '@mui/material'
 import { COLORS } from '@/shared/style/colors'
-import banner from '@/assets/banner.png'
+import bucket from '@/assets/bucket.jpg'
 import { Product } from '@/shared/api/product/types'
 import { ProductCard } from '@/shared/ui/cards/ProductCard'
 
@@ -14,9 +14,9 @@ export const CartView = ({ data, onPay }: CartViewProps) => {
 
     if (data.length === 0) {
         return (
-            <Box>
-                <img src={banner} alt="Banner" />
-                <Typography variant="h4" sx={{ textAlign: 'center', marginTop: '50px' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <img src={bucket} alt="Banner" width={'35%'} />
+                <Typography variant="h4" sx={{ textAlign: 'center', marginTop: '-10px' }}>
                     Put clothes in a bucket
                 </Typography>
             </Box>

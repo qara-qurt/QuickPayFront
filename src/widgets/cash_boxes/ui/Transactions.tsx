@@ -48,7 +48,24 @@ export const Transactions = ({ transactions, cashBox }: ITransactionsProps) => {
     const handleNavigateToCashBox = () => {
         navigate(`/cash-boxes/${cashBox.cashbox_id}/view`)
     }
-    console.log(transactions)
+
+    const today = new Date()
+    const todayTransactions = transactions.filter(transaction => {
+        const createdAtDate = new Date(transaction.created_at)
+        return (
+            createdAtDate.getDate() === today.getDate() &&
+            createdAtDate.getMonth() === today.getMonth() &&
+            createdAtDate.getFullYear() === today.getFullYear()
+        )
+    })
+
+    const todayCash = todayTransactions.reduce((acc, transaction) => {
+        return acc + transaction.totalAmount
+    }, 0)
+
+    const totalCash = transactions.reduce((acc, transaction) => {
+        return acc + transaction.totalAmount
+    }, 0)
 
     return (
         <>
@@ -129,6 +146,34 @@ export const Transactions = ({ transactions, cashBox }: ITransactionsProps) => {
                     </TableBody>
                 </Table>
             </TableContainer>
+
+            <Box
+                sx={{
+                    color: COLORS.white,
+                    backgroundColor: COLORS.blue,
+                    borderRadius: '20px',
+                    padding: '20px 20px',
+                    marginTop: '20px',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                }}
+            >
+                <Box>
+                    <Typography>Today Cash</Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                        {todayCash}
+                        {' kz'}
+                    </Typography>
+                </Box>
+                <Box>
+                    <Typography>Total Cash</Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                        {totalCash}
+                        {' kz'}
+                    </Typography>
+                </Box>
+            </Box>
 
             <Box
                 sx={{

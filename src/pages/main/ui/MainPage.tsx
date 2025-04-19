@@ -22,6 +22,7 @@ import { fetchCashBoxes } from '@/features/cashbox/store/cashboxSlice'
 import { fetchProducts } from '@/features/product/store/productSlice'
 import { Employees } from '@/widgets/employees'
 import { Products } from '@/widgets/products/ui/Products'
+import { Analytics } from '@/widgets/analytics'
 
 const routeToTab: Record<string, number> = {
     '/all': 0,
@@ -55,7 +56,7 @@ const tabs = [
     {
         name: 'Analytics',
         icon: analytics,
-        component: <All />,
+        component: <Analytics />,
     },
 ]
 
@@ -139,7 +140,20 @@ export const MainPage = () => {
                     </Tabs>
                 </Box>
                 <Box>
-                    <img src={support} alt="Support" style={{ width: '100%' }} />
+                    <Link
+                        to="https://t.me/qara_qurtt"
+                        style={{
+                            textDecoration: 'none',
+                            color: COLORS.gray,
+                            fontWeight: 600,
+                        }}
+                    >
+                        <img
+                            src={support}
+                            alt="Support"
+                            style={{ width: '100%', cursor: 'pointer' }}
+                        />
+                    </Link>
                     <Box
                         sx={{
                             display: 'flex',
@@ -175,6 +189,29 @@ export const MainPage = () => {
                     boxSizing: 'border-box',
                 }}
             >
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        width: '100%',
+                        marginBopxom: '-40px',
+                    }}
+                >
+                    <Box
+                        sx={{
+                            backgroundColor: COLORS.white,
+                            color: COLORS.black,
+                            padding: '14px 22px',
+                            borderRadius: '24px',
+                            margin: '20px',
+                            marginBottom: '-30px',
+                        }}
+                    >
+                        <Typography sx={{ fontWeight: 600 }}>
+                            {user?.surname + ' ' + user?.name}
+                        </Typography>
+                    </Box>
+                </Box>
                 {tabs.map((tabPanel, index) => (
                     <CustomTabPanel key={index} value={activeTab} index={index}>
                         {tabPanel.component}
