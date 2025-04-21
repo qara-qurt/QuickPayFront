@@ -19,24 +19,12 @@ export const CashBoxCard = ({ cachBox }: ICashBoxCardProps) => {
     useEffect(() => {
         paymentApi
             .getPaymentsByOrganizationAndCashboxIds(cachBox.organization_id, cachBox.cashbox_id)
-            .then((data: Payment) => {
-                console.log(data)
-                setTransactions(data.data)
-            })
-            .catch(err => {
-                console.error('Error fetching transactions:', err)
-                setTransactions([])
-            })
-    }, [])
-
-    useEffect(() => {
-        paymentApi
-            .getPaymentsByOrganizationAndCashboxIds(cachBox.organization_id, cachBox.cashbox_id)
             .then(res => {
-                setTransactions(res.data)
+                setTransactions(res?.data ?? [])
             })
             .catch(err => {
                 console.error('Error fetching payments:', err)
+                setTransactions([])
             })
     }, [])
 

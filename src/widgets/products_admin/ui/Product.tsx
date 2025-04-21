@@ -25,8 +25,8 @@ export const Product: React.FC<IProductProps> = ({ product, onUpdate }) => {
         id: product.id,
         name: product.name,
         price: product.price,
-        sizes: product.sizes.join(', '),
-        colors: product.colors.join(', '),
+        sizes: product?.sizes?.join(', ') || '',
+        colors: product?.colors?.join(', ') || '',
         description: product.description,
         organization_id: product.organization_id,
         created_at: product.created_at,
@@ -86,8 +86,8 @@ export const Product: React.FC<IProductProps> = ({ product, onUpdate }) => {
             <TableCell>{product.name}</TableCell>
             <TableCell>{product.description}</TableCell>
             <TableCell>{product.price}</TableCell>
-            <TableCell>{product.sizes.join(', ')}</TableCell>
-            <TableCell>{product.colors.join(', ')}</TableCell>
+            <TableCell>{product?.sizes?.join(', ') || ''}</TableCell>
+            <TableCell>{product?.colors?.join(', ') || ''}</TableCell>
             <TableCell>{product.organization_id}</TableCell>
             <TableCell>{product.created_at ? formatDate(product.created_at) : 'Unknown'}</TableCell>
             <TableCell>{product.created_at ? formatDate(product.updated_at) : 'Unknown'}</TableCell>

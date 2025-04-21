@@ -112,8 +112,8 @@ export const MarkModal: React.FC<IMarkModalProps> = ({ open, handleOpen, product
                         `Product: ${product.name}`,
                         `Price: ${product.price}`,
                         `Description: ${product.description}`,
-                        `Sizes: ${product.sizes.join(', ')}`,
-                        `Colors: ${product.colors.join(', ')}`,
+                        `Sizes: ${product?.sizes?.join(', ') || ''}`,
+                        `Colors: ${product?.colors?.join(', ') || ''}`,
                         `Created at: ${product.created_at}`,
                         `Count :${marks.length}`,
                     ].map((text, i) => (
