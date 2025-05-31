@@ -7,7 +7,6 @@ interface IProductCardProps {
 }
 
 export const ProductCard = ({ product }: IProductCardProps) => {
-    console.log('product', product)
     return (
         <Box
             sx={{

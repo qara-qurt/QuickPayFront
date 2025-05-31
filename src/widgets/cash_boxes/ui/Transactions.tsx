@@ -40,7 +40,6 @@ export const Transactions = ({ cashBox }: TransactionsProps) => {
                 currentPage,
                 rowsPerPage,
             )
-            console.log(res)
             setTransactions(Array.isArray(res.data) ? res.data : [])
             setTotalCount(res.totalCount || 0) // ✅ вот это важно!
         } catch (err) {

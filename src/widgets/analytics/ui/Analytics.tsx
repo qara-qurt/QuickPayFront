@@ -28,7 +28,9 @@ import { format, subDays, isSameDay } from 'date-fns'
 
 export const Analytics = () => {
     const [transactions, setTransactions] = useState<PaymentResponse[]>([])
+    const [frame, setFrame] = useState('')
     const cashBoxes = useSelector((state: RootState) => state.cashBoxes.data)
+
     const link =
         cashBoxes.length > 0
             ? `http://localhost:8501/?organization_id=${cashBoxes[0].organization_id}&page=1&limit=1000`
@@ -47,15 +49,30 @@ export const Analytics = () => {
         }
     }, [cashBoxes])
 
+    useEffect(() => {
+        const fetchMetabase = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/api/analytics/embed-url', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                })
+                const data = await response.json()
+                setFrame(data.iframeUrl)
+            } catch (error) {
+                console.error('Error fetching Metabase data:', error)
+            }
+        }
+
+        fetchMetabase()
+    }, [])
+
     const today = new Date()
-    const todayTransactions = transactions.filter(transaction => {
-        const createdAtDate = new Date(transaction.created_at)
-        return (
-            createdAtDate.getDate() === today.getDate() &&
-            createdAtDate.getMonth() === today.getMonth() &&
-            createdAtDate.getFullYear() === today.getFullYear()
-        )
-    })
+    const todayTransactions =
+        transactions?.filter(transaction => isSameDay(new Date(transaction.created_at), today)) ??
+        []
 
     const todayCash = todayTransactions.reduce(
         (acc, transaction) => acc + transaction.totalAmount,
@@ -77,10 +94,8 @@ export const Analytics = () => {
         { title: 'Avg. Purchase Value', value: `${avgPurchase} KZT` },
     ]
 
-    // 🔹 Top Products
     const productCount: Record<string, number> = {}
-
-    transactions.forEach(transaction => {
+    transactions?.forEach(transaction => {
         transaction.products.forEach(product => {
             const name = product.name || 'Unnamed Product'
             productCount[name] = (productCount[name] || 0) + 1
@@ -92,16 +107,14 @@ export const Analytics = () => {
         .sort((a, b) => b.sold - a.sold)
         .slice(0, 5)
 
-    // 🔹 Last 7 days sales
     const last7Days = Array.from({ length: 7 }, (_, i) => subDays(today, 6 - i))
     const salesByDay: Record<string, number> = {}
-
     last7Days.forEach(date => {
         const key = format(date, 'yyyy-MM-dd')
         salesByDay[key] = 0
     })
 
-    transactions.forEach(transaction => {
+    transactions?.forEach(transaction => {
         const transactionDate = new Date(transaction.created_at)
         last7Days.forEach(day => {
             if (isSameDay(transactionDate, day)) {
@@ -112,7 +125,7 @@ export const Analytics = () => {
     })
 
     const salesData = last7Days.map(date => ({
-        date: format(date, 'MMM dd'), // eg: 'Apr 19'
+        date: format(date, 'MMM dd'),
         revenue: salesByDay[format(date, 'yyyy-MM-dd')],
     }))
 
@@ -145,7 +158,6 @@ export const Analytics = () => {
                 ))}
             </Grid>
 
-            {/* 🔹 Sales Chart */}
             <Box mt={5}>
                 <Typography variant="h6" sx={{ mb: 2 }}>
                     Sales Trend (Last 7 Days)
@@ -161,7 +173,6 @@ export const Analytics = () => {
                 </ResponsiveContainer>
             </Box>
 
-            {/* 🔹 Top Products */}
             <Box mt={5}>
                 <Typography variant="h6" sx={{ mb: 2 }}>
                     Best Selling Products
@@ -185,7 +196,6 @@ export const Analytics = () => {
                 </List>
             </Box>
 
-            {/* 🔹 Link to full analytics */}
             <Box mt={5} textAlign="center">
                 <Button
                     variant="contained"
@@ -207,6 +217,27 @@ export const Analytics = () => {
                     Go to Detailed Analytics →
                 </Button>
             </Box>
+
+            {/* Uncomment to show embedded Metabase iframe */}
+            {/* <Box
+                mt={5}
+                sx={{
+                    width: '100%',
+                    height: '80vh',
+                    overflow: 'hidden',
+                    borderRadius: '12px',
+                    boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+                }}
+            >
+                <iframe
+                    src={frame}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        border: 'none',
+                    }}
+                />
+            </Box> */}
         </Box>
     )
 }
