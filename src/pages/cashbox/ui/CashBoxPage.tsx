@@ -51,7 +51,7 @@ export const CashBoxPage = () => {
         if (!id) return
 
         const client = new Client({
-            webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+            webSocketFactory: () => new SockJS('http://35.170.72.34:8080/ws'),
             connectHeaders: { Authorization: `Bearer ${token}` },
             onConnect: () => {
                 console.log(`✅ Connected to WebSocket for cashbox: /topic/cash-box/${id}`)
