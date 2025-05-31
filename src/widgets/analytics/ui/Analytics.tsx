@@ -43,7 +43,7 @@ export const Analytics = () => {
     useEffect(() => {
         const fetchMetabase = async () => {
             try {
-                const response = await fetch('http://35.170.72.34:8080/api/analytics/embed-url', {
+                const response = await fetch('http://35.170.72.34:3000/api/analytics/embed-url', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
