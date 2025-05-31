@@ -7,7 +7,7 @@ import { CashBox } from '@/shared/api/cashbox/types'
 import { formatDate } from '@/shared/utils/formatDate'
 import { useEffect, useState } from 'react'
 import { paymentApi } from '@/shared/api/payment/paymentApi'
-import { Payment, PaymentResponse } from '@/shared/api/payment/types'
+import { PaymentResponse } from '@/shared/api/payment/types'
 
 interface ICashBoxCardProps {
     cachBox: CashBox

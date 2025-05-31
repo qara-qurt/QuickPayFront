@@ -1,14 +1,4 @@
-import {
-    Box,
-    Button,
-    Typography,
-    Card,
-    CardContent,
-    Grid,
-    List,
-    ListItem,
-    ListItemText,
-} from '@mui/material'
+import { Box, Typography, Card, CardContent, Grid } from '@mui/material'
 import { COLORS } from '@/shared/style/colors'
 import {
     LineChart,
@@ -110,12 +100,6 @@ export const Analytics = () => {
             productCount[name] = (productCount[name] || 0) + 1
         })
     })
-
-    const topProducts = Object.entries(productCount)
-        .map(([name, sold]) => ({ name, sold }))
-        .sort((a, b) => b.sold - a.sold)
-        .slice(0, 5)
-
     // Создаем массив последних 7 дней
     const last7Days = Array.from({ length: 7 }, (_, i) => subDays(today, 6 - i))
     const salesByDay: Record<string, number> = {}
