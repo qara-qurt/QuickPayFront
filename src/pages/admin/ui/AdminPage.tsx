@@ -6,11 +6,9 @@ import all from '@/assets/all-menu.svg'
 import cashBox from '@/assets/cashbox-menu.svg'
 import emloyee from '@/assets/emloyee.svg'
 import product from '@/assets/products-menu.svg'
-import analytics from '@/assets/analytics-menu.svg'
 
 import { COLORS } from '@/shared/style/colors'
 import { Link, useNavigate } from 'react-router-dom'
-import { All } from '@/widgets/all'
 import { useDispatch } from 'react-redux'
 import { logout } from '@/features/auth/store/authSlice'
 import { useActiveTab } from '@/pages/main/hooks/useActiveTab'
@@ -47,11 +45,6 @@ const tabs = [
         name: 'Users',
         icon: emloyee,
         component: <UsersAdmin />,
-    },
-    {
-        name: 'Analytics',
-        icon: analytics,
-        component: <All />,
     },
 ]
 

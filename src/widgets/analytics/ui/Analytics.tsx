@@ -27,15 +27,15 @@ import { PaymentResponse } from '@/shared/api/payment/types'
 import { format, subDays, isSameDay } from 'date-fns'
 
 export const Analytics = () => {
+    // Стейт для всех транзакций
     const [transactions, setTransactions] = useState<PaymentResponse[]>([])
+    // Стейт для URL iframe с метабазы
     const [frame, setFrame] = useState('')
+
+    // Получаем cashBoxes из редакс стора
     const cashBoxes = useSelector((state: RootState) => state.cashBoxes.data)
 
-    const link =
-        cashBoxes.length > 0
-            ? `http://localhost:8501/?organization_id=${cashBoxes[0].organization_id}&page=1&limit=1000`
-            : ''
-
+    // Загружаем транзакции при наличии cashBoxes
     useEffect(() => {
         if (cashBoxes.length > 0) {
             paymentApi
@@ -49,6 +49,7 @@ export const Analytics = () => {
         }
     }, [cashBoxes])
 
+    // Загружаем ссылку для iframe с метабазы при монтировании
     useEffect(() => {
         const fetchMetabase = async () => {
             try {
@@ -69,24 +70,31 @@ export const Analytics = () => {
         fetchMetabase()
     }, [])
 
+    // Получаем сегодняшнюю дату
     const today = new Date()
+
+    // Фильтруем транзакции только за сегодня
     const todayTransactions =
         transactions?.filter(transaction => isSameDay(new Date(transaction.created_at), today)) ??
         []
 
+    // Считаем сумму продаж за сегодня
     const todayCash = todayTransactions.reduce(
         (acc, transaction) => acc + transaction.totalAmount,
         0,
     )
 
+    // Считаем количество проданных товаров сегодня
     const soldItems = todayTransactions.reduce(
         (acc, transaction) => acc + transaction.products.length,
         0,
     )
 
+    // Средний чек
     const avgPurchase =
         todayTransactions.length > 0 ? Math.round(todayCash / todayTransactions.length) : 0
 
+    // Статистика для отображения
     const stats = [
         { title: 'Total Revenue Today', value: `${todayCash} KZT` },
         { title: 'Transactions Today', value: `${todayTransactions.length}` },
@@ -94,6 +102,7 @@ export const Analytics = () => {
         { title: 'Avg. Purchase Value', value: `${avgPurchase} KZT` },
     ]
 
+    // Подсчет топ-5 продуктов по количеству продаж за все время
     const productCount: Record<string, number> = {}
     transactions?.forEach(transaction => {
         transaction.products.forEach(product => {
@@ -107,6 +116,7 @@ export const Analytics = () => {
         .sort((a, b) => b.sold - a.sold)
         .slice(0, 5)
 
+    // Создаем массив последних 7 дней
     const last7Days = Array.from({ length: 7 }, (_, i) => subDays(today, 6 - i))
     const salesByDay: Record<string, number> = {}
     last7Days.forEach(date => {
@@ -114,6 +124,7 @@ export const Analytics = () => {
         salesByDay[key] = 0
     })
 
+    // Считаем выручку по каждому дню из последних 7
     transactions?.forEach(transaction => {
         const transactionDate = new Date(transaction.created_at)
         last7Days.forEach(day => {
@@ -124,6 +135,7 @@ export const Analytics = () => {
         })
     })
 
+    // Формируем данные для графика
     const salesData = last7Days.map(date => ({
         date: format(date, 'MMM dd'),
         revenue: salesByDay[format(date, 'yyyy-MM-dd')],
@@ -135,6 +147,7 @@ export const Analytics = () => {
                 Analytics Overview
             </Typography>
 
+            {/* Карточки с ключевой статистикой */}
             <Grid container spacing={3}>
                 {stats.map((stat, idx) => (
                     <Grid item xs={12} sm={6} md={3} key={idx}>
@@ -158,6 +171,7 @@ export const Analytics = () => {
                 ))}
             </Grid>
 
+            {/* График продаж за последние 7 дней */}
             <Box mt={5}>
                 <Typography variant="h6" sx={{ mb: 2 }}>
                     Sales Trend (Last 7 Days)
@@ -173,57 +187,11 @@ export const Analytics = () => {
                 </ResponsiveContainer>
             </Box>
 
-            <Box mt={5}>
-                <Typography variant="h6" sx={{ mb: 2 }}>
-                    Best Selling Products
-                </Typography>
-                <List
-                    sx={{
-                        backgroundColor: COLORS.white,
-                        borderRadius: '12px',
-                        boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-                        maxWidth: '400px',
-                    }}
-                >
-                    {topProducts.map((product, index) => (
-                        <ListItem key={index} divider>
-                            <ListItemText
-                                primary={product.name}
-                                secondary={`Sold: ${product.sold}`}
-                            />
-                        </ListItem>
-                    ))}
-                </List>
-            </Box>
-
-            <Box mt={5} textAlign="center">
-                <Button
-                    variant="contained"
-                    sx={{
-                        backgroundColor: '#2979ff',
-                        color: '#fff',
-                        padding: '12px 24px',
-                        borderRadius: '12px',
-                        textTransform: 'none',
-                        fontSize: '16px',
-                        fontWeight: 600,
-                        ':hover': {
-                            backgroundColor: '#1565c0',
-                        },
-                    }}
-                    href={link}
-                    target="_blank"
-                >
-                    Go to Detailed Analytics →
-                </Button>
-            </Box>
-
-            {/* Uncomment to show embedded Metabase iframe */}
-            {/* <Box
+            <Box
                 mt={5}
                 sx={{
                     width: '100%',
-                    height: '80vh',
+                    height: '2800px',
                     overflow: 'hidden',
                     borderRadius: '12px',
                     boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
@@ -235,9 +203,10 @@ export const Analytics = () => {
                         width: '100%',
                         height: '100%',
                         border: 'none',
+                        overflow: 'hidden',
                     }}
                 />
-            </Box> */}
+            </Box>
         </Box>
     )
 }
