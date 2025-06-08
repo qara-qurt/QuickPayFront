@@ -16,14 +16,13 @@ import { QrCodeView } from './QrCodeView.tsx'
 const token = localStorage.getItem('token') || ''
 
 export const CashBoxPage = () => {
-    const [step, setStep] = useState<'cart' | 'payment' | 'qr'>('payment')
+    const [step, setStep] = useState<'cart' | 'payment' | 'qr'>('cart')
     const [selectedMethod, setSelectedMethod] = useState<string | null>(null)
     const [data, setData] = useState<Product[]>([])
     const { id } = useParams<{ id: string }>()
     const cashbox = useSelector((state: RootState) => state.cashBoxes.data).find(
         cashbox => cashbox.cashbox_id === id,
     )
-    console.log('Cashbox:', cashbox)
     const navigate = useNavigate()
     const stompClientRef = useRef<Client | null>(null)
 
